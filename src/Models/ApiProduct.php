@@ -124,11 +124,12 @@ class ApiProduct extends Model
         'product_other',
 
         // product imagery
-        //        'product_image_primary',
+        'product_image_primary',
         'product_image_primary_alt',
-        //        'product_image_secondary',
+        'product_image_secondary',
         'product_image_secondary_alt',
-        //        'product_gallery_images',
+        'product_gallery_images',
+        'product_variant_images',
         'created_by_id',
         'updated_by_id',
     ];

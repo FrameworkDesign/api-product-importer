@@ -50,7 +50,6 @@ class ServiceProvider extends AddonServiceProvider
 
             $items['Dashboard'] = cp_route('weareframework.api-product-importer.dashboard.index');
             $items['Settings'] = cp_route('weareframework.api-product-importer.settings.index');
-            $items['Import'] = cp_route('weareframework.api-product-importer.import.index');
 
             $nav->tools('Product Importer - API')
                 ->route('weareframework.api-product-importer.dashboard.index')

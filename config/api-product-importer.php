@@ -55,7 +55,7 @@ return [
                     'instructions' => 'The URL of the API route',
                     'validate' => 'required|string|url',
                 ],
-                'api_product_importer_title_append' => [
+                'api_product_importer_method' => [
                     'type' => 'select',
                     'display' => 'Route Method Type',
                     'instructions' => 'What method type?',

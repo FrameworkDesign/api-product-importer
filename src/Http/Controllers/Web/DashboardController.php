@@ -17,9 +17,9 @@ class DashboardController extends CpController
     {
         $apiProductsCount = ApiProduct::all('id')->count();
         $settings = (new CollectSettings($file))->handle();
-        dd($settings, $settings->fields, $settings->values);
         return view('api-product-importer::dashboard.index', [
-            'apiProductsCount' => $apiProductsCount
+            'apiProductsCount' => $apiProductsCount,
+            'settings' => $settings
         ]);
     }
 

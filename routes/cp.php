@@ -12,9 +12,6 @@ Route::prefix('weareframework/api-product-importer')->group(function () {
     Route::post('/settings', ['\\'. SettingsController::class, 'update'])->name('weareframework.api-product-importer.settings.update');
 
     Route::get('/start', ['\\'. ImportController::class, 'index'])->name('weareframework.api-product-importer.import.index');
-    Route::post('/process', ['\\'. ImportController::class, 'process'])->name('weareframework.api-product-importer.import.process');
-
-
 
     Route::prefix('api')->group(function () {
         Route::get('/', ['\\' . ApiImportController::class, 'index'])->name('weareframework.api-product-importer.api.imported.index');
