@@ -1,0 +1,19 @@
+{
+    "name": "weareframework/api-product-importer",
+    "autoload": {
+        "psr-4": {
+            "Weareframework\\ApiProductImporter\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Api Product Importer",
+            "description": "Api Product Importer addon"
+        },
+        "laravel": {
+            "providers": [
+                "Weareframework\\ApiProductImporter\\ServiceProvider"
+            ]
+        }
+    }
+}
