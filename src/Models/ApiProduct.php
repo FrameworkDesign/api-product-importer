@@ -3,9 +3,12 @@
 namespace Weareframework\ApiProductImporter\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Weareframework\ApiProductImporter\Library\Models\FillableHelpers;
 
 class ApiProduct extends Model
 {
+    use FillableHelpers;
+
     protected $fillable = [
         'type', // simple or configurable
         'is_duplicate',
@@ -124,10 +127,9 @@ class ApiProduct extends Model
         'updated_by_id'
     ];
 
-//    public $appends = [
-//        'edit',
-//        'colors'
-//    ];
+    public $appends = [
+        'colors'
+    ];
 
     protected $casts = [
 //        'description' => 'json',
@@ -155,26 +157,24 @@ class ApiProduct extends Model
         'product_variant_images' => 'array',
     ];
 
+    public $notForMapping = [];
+    public $rules = [];
 
-//    public function parent()
-//    {
-//        return $this->belongsTo(self::class, 'sku', 'parent_sku')->orderBy('order');
-//    }
-//
-//    public function children()
-//    {
-//        return $this->hasMany(self::class, 'parent_sku', 'sku')->orderBy('order');
-//    }
-//
-//    public function getEditAttribute()
-//    {
-//        return false;
-//    }
-//
-//    public function getColorsAttribute()
-//    {
-//        return explode('_', $this->color);
-//    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'sku', 'parent_sku')->orderBy('order');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_sku', 'sku')->orderBy('order');
+    }
+
+    public function getColorsAttribute()
+    {
+        return explode('_', $this->color);
+    }
 
     public function getConnectionName()
     {

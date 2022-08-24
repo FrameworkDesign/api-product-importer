@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Statamic\Console\RunsInPlease;
-use Weareframework\ApiProductImporter\Jobs\Import\ImportApiProduct;
+use Weareframework\ApiProductImporter\Jobs\Pull\ImportApiProduct;
 use Weareframework\ApiProductImporter\Library\Files\File;
 use Weareframework\ApiProductImporter\Library\Settings\CollectSettings;
 

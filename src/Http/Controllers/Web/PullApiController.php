@@ -25,5 +25,4 @@ class PullApiController extends CpController
         return redirect()->route('statamic.cp.weareframework.api-product-importer.dashboard.index');
     }
 
-
 }

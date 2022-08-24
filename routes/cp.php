@@ -2,7 +2,7 @@
 
 use Weareframework\ApiProductImporter\Http\Controllers\Web\DashboardController;
 use Weareframework\ApiProductImporter\Http\Controllers\Web\SettingsController;
-use Weareframework\ApiProductImporter\Http\Controllers\Web\ImportController;
+use Weareframework\ApiProductImporter\Http\Controllers\Web\StatamicImportController;
 use Weareframework\ApiProductImporter\Http\Controllers\Web\PullApiController;
 use Weareframework\ApiProductImporter\Http\Controllers\Api\ApiImportController;
 
@@ -15,7 +15,12 @@ Route::prefix('weareframework/api-product-importer')->group(function () {
     Route::get('/pull', ['\\'. PullApiController::class, 'index'])->name('weareframework.api-product-importer.pull-data.index');
     Route::get('/delete', ['\\'. PullApiController::class, 'delete'])->name('weareframework.api-product-importer.pull-data.delete');
 
-    Route::get('/import', ['\\'. ImportController::class, 'index'])->name('weareframework.api-product-importer.import.index');
+    Route::get('/statamic', ['\\'. StatamicImportController::class, 'index'])->name('weareframework.api-product-importer.import.index');
+    Route::get('/statamic/site-target', ['\\'. StatamicImportController::class, 'siteTarget'])->name('weareframework.api-product-importer.statamic.site-target');
+    Route::post('/statamic/field-mapping', ['\\'. StatamicImportController::class, 'fieldMapping'])->name('weareframework.api-product-importer.statamic.field-mapping');
+    Route::post('/statamic/process-import', ['\\'. StatamicImportController::class, 'processImport'])->name('weareframework.api-product-importer.statamic.process-import');
+    Route::get('/statamic/finished', ['\\'. StatamicImportController::class, 'finished'])->name('weareframework.api-product-importer.statamic.finished');
+    Route::get('/statamic/clear', ['\\'. StatamicImportController::class, 'clear'])->name('weareframework.api-product-importer.statamic.clear');
 
     Route::prefix('api')->group(function () {
         Route::get('/', ['\\' . ApiImportController::class, 'index'])->name('weareframework.api-product-importer.api.imported.index');

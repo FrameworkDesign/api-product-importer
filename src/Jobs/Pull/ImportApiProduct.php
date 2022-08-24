@@ -1,6 +1,6 @@
 <?php
 
-namespace Weareframework\ApiProductImporter\Jobs\Import;
+namespace Weareframework\ApiProductImporter\Jobs\Pull;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

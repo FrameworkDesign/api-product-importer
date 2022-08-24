@@ -3,26 +3,43 @@
 
 @section('content')
     <div class="flex items-center mb-3">
-        <h1 class="flex-1">API Product Importer Dashboard</h1>
+        <h1 class="flex-1 font-bold">API Product Importer Dashboard</h1>
+        <p>The flow of getting products into statamic is like so:</p>
     </div>
     @if(!is_null($settings->values['api_product_importer_route']) && !empty($settings->values['api_product_importer_route']))
-        <div class="mb-3">
-            <a href="{{ cp_route('weareframework.api-product-importer.pull-data.index') }}" class="btn-primary">Import</a>
+        <div class="mb-5">
+            <div>
+                <h3 class="font-bold">1. API</h3>
+                <p>We pull products from the RST Product portal</p>
+                <a href="{{ cp_route('weareframework.api-product-importer.pull-data.index') }}" class="btn-primary">
+                    Pull API Products
+                </a>
 
-            <a href="{{ cp_route('weareframework.api-product-importer.pull-data.delete') }}" class="btn-danger ml-2" onclick="return confirm('Are you sure you want to delete all api pulled products?');">
-                Delete All
-            </a>
+                <a href="{{ cp_route('weareframework.api-product-importer.pull-data.delete') }}" class="btn-danger ml-2" onclick="return confirm('Are you sure you want to delete all api pulled products?');">
+                    Delete All API Products
+                </a>
+                <br>
+                <p class="mt-.5">You have <strong>{{ $apiProducts->count() }}</strong> API products imported so far</p>
+            </div>
+
+            @if($apiProducts->count() > 0)
+                <div class="mt-2">
+                    <h3 class="font-bold">2. Import to Statamic</h3>
+                    <p>Import API products into</p>
+                    <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="btn-primary">Statamic</a>
+                </div>
+            @endif
         </div>
     @endif
         <div>
             <div class="mb-3">
-                <p>You have {{ $apiProductsCount ?? 0 }} Products imported so far</p>
+
                 @if(is_null($settings->values['api_product_importer_route']) || empty($settings->values['api_product_importer_route']))
                     <p class="font-bold">You need to fill out the importer route in settings</p>
                 @endif
 
                 <div class="card mt-2">
-                    <p class="font-bold">Current settings:</p>
+                    <p class="font-bold">Current API settings:</p>
                     <table class="data-table mb-2">
                         <thead>
                             <tr>
