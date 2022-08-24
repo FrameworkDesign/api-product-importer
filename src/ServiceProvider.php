@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Statamic;
 use Weareframework\ApiProductImporter\Commands\Import\PullProductsFromApi;
+use Weareframework\ApiProductImporter\Fieldtypes\ApiProductDataImporterFieldType;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -18,6 +19,10 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $routes = [
         'cp'  => __DIR__.'/../routes/cp.php',
+    ];
+
+    protected $fieldtypes = [
+        ApiProductDataImporterFieldType::class
     ];
 
 

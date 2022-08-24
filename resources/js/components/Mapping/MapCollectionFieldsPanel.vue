@@ -1,23 +1,24 @@
 <template>
-    <div class="w-full flex flex-wrap -mx-2">
+    <div className="w-full flex flex-wrap -mx-2">
         <template v-for="field in config.fields">
-            <div class="w-full flex flex-wrap px-2 py-4" v-if="field.handle === 'product_variants'">
-                <h3 class="w-full flex flex-wrap px-2 mb-2">Product Variant Fields</h3>
-                <div class="w-1/2 px-2 mb-2" v-for="customField in field.option_fields">
-                    <label class="block capitalize mb-1">{{ customField.display || customField.handle }}</label>
+            <div className="w-full flex flex-wrap px-2 py-4" v-if="field.handle === 'product_variants'">
+                <h3 className="w-full flex flex-wrap px-2 mb-2">Product Variant Fields</h3>
+                <div className="w-1/2 px-2 mb-2" v-for="customField in field.option_fields">
+                    <label className="block capitalize mb-1">{{ customField.display || customField.handle }}</label>
                     <v-select
-                        class="w-full"
+                        className="w-full"
                         :options="config.keys"
                         :value="customMapping[customField.handle]"
                         @input="(value) => setCustomFieldMapping(customField.handle, value)"
                     />
-                    <input type="hidden" :name="'custom_field_mapping[' + customField.handle + ']'" :value="customMapping[customField.handle]">
+                    <input type="hidden" :name="'custom_field_mapping[' + customField.handle + ']'"
+                           :value="customMapping[customField.handle]">
                 </div>
             </div>
-            <div class="w-1/2 px-2 mb-2" v-else>
-                <label class="block capitalize mb-1">{{ field.display || field.handle }}</label>
+            <div className="w-1/2 px-2 mb-2" v-else>
+                <label className="block capitalize mb-1">{{ field.display || field.handle }}</label>
                 <v-select
-                    class="w-full"
+                    className="w-full"
                     :options="config.keys"
                     :value="mapping[field.handle]"
                     @input="(value) => setMapping(field.handle, value)"
@@ -30,11 +31,11 @@
 
 <script>
 export default {
-    mixins: [ Fieldtype ],
+    mixins: [Fieldtype],
 
     props: ['config'],
 
-    data: function() {
+    data: function () {
         return {
             mapping: {},
             customMapping: {}
@@ -59,6 +60,6 @@ export default {
         setCustomFieldMapping: function (handle, value) {
             this.$set(this.customMapping, handle, value);
         },
-  }
+    }
 }
 </script>

@@ -19,14 +19,14 @@
                 <p class="text-grey mb-2">Match your data with the fields of the collection.</p>
             </header>
             <h2 class="mb-3">Fieldset Data</h2>
-            <fwk-data-import
+            <map-collection-fields-panel
                 name="mapping"
                 id="mapping"
                 :config="{
                     keys: {{ json_encode($keys) }},
                     fields: {{ json_encode($fields) }},
                 }"
-            ></fwk-data-import>
+            ></map-collection-fields-panel>
             @foreach ($errors as $error)
                 <p class="text-red-500 mb-1">{{ $error }}</p>
             @endforeach

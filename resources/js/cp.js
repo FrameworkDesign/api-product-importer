@@ -1,9 +1,8 @@
-import ApiProductDataImporter from "./components/Products/ApiProductDataImporter";
-import ApiProductDataImporter from "./components/FieldTypes/ApiProductDataImporter";
-import ImportedPanel from "./components/Imported/ImportedPanel";
+import MapCollectionFieldsPanel from "./components/Mapping/MapCollectionFieldsPanel";
+import ApiProductDataImporterFieldType from "./components/FieldTypes/ApiProductDataImporterFieldType";
 
-Statamic.$components.register("api-product-data-importer", ApiProductDataImporter);
-Statamic.$components.register("api-product-data-importer", ApiProductDataImporter);
-Statamic.$components.register("imported-panel", ImportedPanel);
+Statamic.$components.register("api-product-data-importer-fieldtype", ApiProductDataImporterFieldType);
+Statamic.$components.register("map-collection-fields-panel", MapCollectionFieldsPanel);
+
 
 
