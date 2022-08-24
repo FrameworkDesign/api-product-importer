@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Statamic;
+use Weareframework\ApiProductImporter\Commands\Import\PullProductsFromApi;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -18,6 +19,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $routes = [
         'cp'  => __DIR__.'/../routes/cp.php',
     ];
+
 
     public function register()
     {
@@ -30,6 +32,10 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
+        $this->commands([
+            PullProductsFromApi::class,
+        ]);
+
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'api-product-importer');
 
         if ($this->app->runningInConsole()) {

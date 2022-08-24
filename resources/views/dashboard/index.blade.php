@@ -7,7 +7,11 @@
     </div>
     @if(!is_null($settings->values['api_product_importer_route']) && !empty($settings->values['api_product_importer_route']))
         <div class="mb-3">
-            <a href="{{ cp_route('weareframework.api-product-importer.import.index') }}" class="btn-primary">Import</a>
+            <a href="{{ cp_route('weareframework.api-product-importer.pull-data.index') }}" class="btn-primary">Import</a>
+
+            <a href="{{ cp_route('weareframework.api-product-importer.pull-data.delete') }}" class="btn-danger ml-2" onclick="return confirm('Are you sure you want to delete all api pulled products?');">
+                Delete All
+            </a>
         </div>
     @endif
         <div>

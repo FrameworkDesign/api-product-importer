@@ -3,20 +3,10 @@
 namespace Weareframework\ApiProductImporter\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Weareframework\ApiProductImporter\Casts\MultiSelectFieldCast;
-use Weareframework\ApiProductImporter\Library\Models\FillableHelpers;
 
 class ApiProduct extends Model
 {
-    use FillableHelpers;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        // product key
         'type', // simple or configurable
         'is_duplicate',
         'configurable_on',
@@ -131,75 +121,60 @@ class ApiProduct extends Model
         'product_gallery_images',
         'product_variant_images',
         'created_by_id',
-        'updated_by_id',
+        'updated_by_id'
     ];
 
-    public $appends = [
-        'edit',
-        'colors'
-    ];
-
-    public $notForMapping = [];
+//    public $appends = [
+//        'edit',
+//        'colors'
+//    ];
 
     protected $casts = [
+//        'description' => 'json',
         'use_config_backorders' => 'boolean',
         'configurable_on' => 'json',
-        'variant_colors' => MultiSelectFieldCast::class,
-        'product_panels' => MultiSelectFieldCast::class,
-        'product_ventilation' => MultiSelectFieldCast::class,
-        'product_collar' => MultiSelectFieldCast::class,
-        'product_cuff' => MultiSelectFieldCast::class,
-        'product_fastening' => MultiSelectFieldCast::class,
-        'product_adjustment' => MultiSelectFieldCast::class,
-        'product_reinforcement' => MultiSelectFieldCast::class,
-        'product_shift_pad' => MultiSelectFieldCast::class,
-        'product_inner_pocket' => MultiSelectFieldCast::class,
-        'product_outer_pocket' => MultiSelectFieldCast::class,
-        'product_pocket' => MultiSelectFieldCast::class,
-        'product_detail' => MultiSelectFieldCast::class,
-        'shoe_sole' => MultiSelectFieldCast::class,
-        'product_finger' => MultiSelectFieldCast::class,
-        'product_knuckle' => MultiSelectFieldCast::class,
-        'product_palm' => MultiSelectFieldCast::class,
-        'product_other' => MultiSelectFieldCast::class,
+        'variant_colors' => 'array',
+        'product_panels' => 'array',
+        'product_ventilation' => 'array',
+        'product_collar' => 'array',
+        'product_cuff' => 'array',
+        'product_fastening' => 'array',
+        'product_adjustment' => 'array',
+        'product_reinforcement' => 'array',
+        'product_shift_pad' => 'array',
+        'product_inner_pocket' => 'array',
+        'product_outer_pocket' => 'array',
+        'product_pocket' => 'array',
+        'product_detail' => 'array',
+        'shoe_sole' => 'array',
+        'product_finger' => 'array',
+        'product_knuckle' => 'array',
+        'product_palm' => 'array',
+        'product_other' => 'array',
+        'product_gallery_images' => 'array',
+        'product_variant_images' => 'array',
     ];
 
-    public static $rules = [];
 
-    public static function booted()
-    {
-        static::creating(function ($product) {
-            if ($product['type'] === 'configurable') {
-                $product->configurable_on = config('statamic.framework-importer.configurable');
-            }
-        });
-
-        static::updating(function ($product) {
-            if ($product['type'] === 'configurable') {
-                $product->configurable_on = config('statamic.framework-importer.configurable');
-            }
-        });
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo(self::class, 'sku', 'parent_sku')->orderBy('order');
-    }
-
-    public function children()
-    {
-        return $this->hasMany(self::class, 'parent_sku', 'sku')->orderBy('order');
-    }
-
-    public function getEditAttribute()
-    {
-        return false;
-    }
-
-    public function getColorsAttribute()
-    {
-        return explode('_', $this->color);
-    }
+//    public function parent()
+//    {
+//        return $this->belongsTo(self::class, 'sku', 'parent_sku')->orderBy('order');
+//    }
+//
+//    public function children()
+//    {
+//        return $this->hasMany(self::class, 'parent_sku', 'sku')->orderBy('order');
+//    }
+//
+//    public function getEditAttribute()
+//    {
+//        return false;
+//    }
+//
+//    public function getColorsAttribute()
+//    {
+//        return explode('_', $this->color);
+//    }
 
     public function getConnectionName()
     {
