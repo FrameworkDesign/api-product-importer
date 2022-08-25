@@ -2,22 +2,25 @@
 
 > Api Product Importer is a Statamic addon that does something pretty neat.
 
-## Features
+### Install locally
+If installing locally then create a local folder to put this in e.g. **addons**, then **weareframework** so full folder path is **addons/weareframework**
+clone this repo in and then update your composer file to make statamic aware of a local file like so:
 
-This addon does:
-
-- This
-- And this
-- And even this
-
-## How to Install
-
-You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or run the following command from your project root:
-
-``` bash
-composer require weareframework/api-product-importer
 ```
+    ...
+ 
+    "require": {
+        ...,
+        "weareframework/api-product-importer": "*"
+    },
+ 
+    ...
+    "repositories": [
+        {
+            "type": "path",
+            "url": "addons/weareframework/api-product-importer"
+        }
+    ]
+```    
 
-## How to Use
-
-Here's where you can explain how to use this wonderful addon.
+the docs at statamic refer to how to do this also: https://statamic.dev/extending/addons#private-addons
