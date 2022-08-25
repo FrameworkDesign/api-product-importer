@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full flex flex-wrap -mx-2">
-        <p>field here</p>
+    <div class="w-full flex flex-wrap p-2">
+        <p class="font-bold">API Product field here</p>
     </div>
 </template>
 

@@ -177,8 +177,10 @@ var staticRenderFns = [function () {
       _c = _vm._self._c;
 
   return _c("div", {
-    staticClass: "w-full flex flex-wrap -mx-2"
-  }, [_c("p", [_vm._v("field here")])]);
+    staticClass: "w-full flex flex-wrap p-2"
+  }, [_c("p", {
+    staticClass: "font-bold"
+  }, [_vm._v("API Product field here")])]);
 }];
 render._withStripped = true;
 
@@ -201,30 +203,20 @@ var render = function render() {
       _c = _vm._self._c;
 
   return _c("div", {
-    attrs: {
-      className: "w-full flex flex-wrap -mx-2"
-    }
+    staticClass: "w-full flex flex-wrap -mx-2"
   }, [_vm._l(_vm.config.fields, function (field) {
     return [field.handle === "product_variants" ? _c("div", {
-      attrs: {
-        className: "w-full flex flex-wrap px-2 py-4"
-      }
+      staticClass: "w-full flex flex-wrap px-2 py-4"
     }, [_c("h3", {
-      attrs: {
-        className: "w-full flex flex-wrap px-2 mb-2"
-      }
+      staticClass: "w-full flex flex-wrap px-2 mb-2"
     }, [_vm._v("Product Variant Fields")]), _vm._v(" "), _vm._l(field.option_fields, function (customField) {
       return _c("div", {
-        attrs: {
-          className: "w-1/2 px-2 mb-2"
-        }
+        staticClass: "w-1/2 px-2 mb-2"
       }, [_c("label", {
-        attrs: {
-          className: "block capitalize mb-1"
-        }
+        staticClass: "block capitalize mb-1"
       }, [_vm._v(_vm._s(customField.display || customField.handle))]), _vm._v(" "), _c("v-select", {
+        staticClass: "w-full",
         attrs: {
-          className: "w-full",
           options: _vm.config.keys,
           value: _vm.customMapping[customField.handle]
         },
@@ -243,16 +235,12 @@ var render = function render() {
         }
       })], 1);
     })], 2) : _c("div", {
-      attrs: {
-        className: "w-1/2 px-2 mb-2"
-      }
+      staticClass: "w-1/2 px-2 mb-2"
     }, [_c("label", {
-      attrs: {
-        className: "block capitalize mb-1"
-      }
+      staticClass: "block capitalize mb-1"
     }, [_vm._v(_vm._s(field.display || field.handle))]), _vm._v(" "), _c("v-select", {
+      staticClass: "w-full",
       attrs: {
-        className: "w-full",
         options: _vm.config.keys,
         value: _vm.mapping[field.handle]
       },
@@ -269,7 +257,9 @@ var render = function render() {
       domProps: {
         value: _vm.mapping[field.handle]
       }
-    })], 1)];
+    }), _vm._v(" "), ["title", "sku"].includes(field.handle) ? _c("p", {
+      staticClass: "text-xs text-red text-danger"
+    }, [_vm._v("This field is required")]) : _vm._e()], 1)];
   })], 2);
 };
 
@@ -540,7 +530,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_FieldTypes_ApiProductDataImporterFieldType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/FieldTypes/ApiProductDataImporterFieldType */ "./resources/js/components/FieldTypes/ApiProductDataImporterFieldType.vue");
 
 
-Statamic.$components.register("api-product-data-importer-fieldtype", _components_FieldTypes_ApiProductDataImporterFieldType__WEBPACK_IMPORTED_MODULE_1__["default"]);
+Statamic.$components.register("api_product_data_importer-fieldtype", _components_FieldTypes_ApiProductDataImporterFieldType__WEBPACK_IMPORTED_MODULE_1__["default"]);
 Statamic.$components.register("map-collection-fields-panel", _components_Mapping_MapCollectionFieldsPanel__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),

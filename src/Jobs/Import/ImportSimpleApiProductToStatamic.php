@@ -67,8 +67,8 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
         $this->collection = CollectionFacade::findByHandle($collection);
         $this->mapping = $mapping;
         $this->isLast = $isLast;
-        $this->errors = cache()->get("{$this->uuid}-statamic-import-errors");
-        $this->failedRows = cache()->get("{$this->uuid}-statamic-import-failed");
+        $this->errors = cache()->get("{$this->uuid}-api-product-statamic-import-errors");
+        $this->failedRows = cache()->get("{$this->uuid}-api-product-statamic-import-failed");
 
         $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
         /** @var \Statamic\Fields\Blueprint $blueprint */

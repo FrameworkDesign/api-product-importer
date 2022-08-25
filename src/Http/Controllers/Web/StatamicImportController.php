@@ -3,6 +3,7 @@
 namespace Weareframework\ApiProductImporter\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Statamic\Facades\Site;
 use Statamic\Facades\Collection;
@@ -81,6 +82,7 @@ class StatamicImportController extends CpController
         $mapping = collect($request->get('mapping'))->filter();
         $customMapping = ($request->has('custom_field_mapping')) ? collect($request->get('custom_field_mapping'))->filter() : null;
         $collection = $request->session()->get('api-product-statamic-data-import-collection');
+        Log::info('processImport: ' . $collection);
         $site = session()->get('api-product-statamic-data-import-site', Site::default()->handle());
         $uuid = Str::uuid()->toString();
         $request->session()->put('api-product-statamic-data-import-uuid', $uuid);
@@ -89,6 +91,7 @@ class StatamicImportController extends CpController
         $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
         /** @var \Statamic\Fields\Blueprint $blueprint */
         $blueprint = $collectionModel->entryBlueprint($blueprintHandle);
+        Log::info(json_encode($blueprint->fields()->resolveFields()->toArray()));
 
         if ($collection === 'products') {
             $request->session()->put('api-product-statamic-data-import-type', 'simple');
@@ -105,7 +108,7 @@ class StatamicImportController extends CpController
             ImportAllConfigurableApiProductsToStatamic::dispatch(
                 $uuid,
                 $site,
-                $collection = 'products',
+                $collection,
                 $mapping,
                 $customMapping
             );

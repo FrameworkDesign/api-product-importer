@@ -15,7 +15,7 @@
         <div class="card rounded p-3 lg:px-7 lg:py-5 shadow bg-white">
             <header class="text-center mb-6">
                 <h1 class="mb-3">Map your data</h1>
-                <p class="text-grey mb-2">This will import {{ $type }} products @if($type === 'configurable') and all children products associated with the parent product (configurable) @endif</p>
+                <p class="text-grey mb-2">This will import <strong>{{ $type }}</strong> products @if($type === 'configurable') and all children products associated with the parent product (configurable) @endif</p>
                 <p class="text-grey mb-2">Match your data with the fields of the collection.</p>
             </header>
             <h2 class="mb-3">Fieldset Data</h2>

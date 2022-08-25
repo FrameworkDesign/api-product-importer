@@ -58,5 +58,11 @@
                 </div>
             @endif
         </div>
+
+        <div class="mt-5">
+            <a href="{{ cp_route('weareframework.api-product-importer.dashboard.index') }}" class="btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
     </form>
 @endsection

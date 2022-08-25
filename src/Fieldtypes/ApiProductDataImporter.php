@@ -12,7 +12,7 @@ use Statamic\Fields\Fieldtype;
 
 
 
-class ApiProductDataImporterFieldType extends Fieldtype
+class ApiProductDataImporter extends Fieldtype
 {
     protected $categories = ['special'];
     protected $defaultValue = null;

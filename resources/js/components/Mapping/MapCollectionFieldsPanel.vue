@@ -1,12 +1,12 @@
 <template>
-    <div className="w-full flex flex-wrap -mx-2">
+    <div class="w-full flex flex-wrap -mx-2">
         <template v-for="field in config.fields">
-            <div className="w-full flex flex-wrap px-2 py-4" v-if="field.handle === 'product_variants'">
-                <h3 className="w-full flex flex-wrap px-2 mb-2">Product Variant Fields</h3>
-                <div className="w-1/2 px-2 mb-2" v-for="customField in field.option_fields">
-                    <label className="block capitalize mb-1">{{ customField.display || customField.handle }}</label>
+            <div class="w-full flex flex-wrap px-2 py-4" v-if="field.handle === 'product_variants'">
+                <h3 class="w-full flex flex-wrap px-2 mb-2">Product Variant Fields</h3>
+                <div class="w-1/2 px-2 mb-2" v-for="customField in field.option_fields">
+                    <label class="block capitalize mb-1">{{ customField.display || customField.handle }}</label>
                     <v-select
-                        className="w-full"
+                        class="w-full"
                         :options="config.keys"
                         :value="customMapping[customField.handle]"
                         @input="(value) => setCustomFieldMapping(customField.handle, value)"
@@ -15,15 +15,16 @@
                            :value="customMapping[customField.handle]">
                 </div>
             </div>
-            <div className="w-1/2 px-2 mb-2" v-else>
-                <label className="block capitalize mb-1">{{ field.display || field.handle }}</label>
+            <div class="w-1/2 px-2 mb-2" v-else>
+                <label class="block capitalize mb-1">{{ field.display || field.handle }}</label>
                 <v-select
-                    className="w-full"
+                    class="w-full"
                     :options="config.keys"
                     :value="mapping[field.handle]"
                     @input="(value) => setMapping(field.handle, value)"
                 />
                 <input type="hidden" :name="'mapping[' + field.handle + ']'" :value="mapping[field.handle]">
+                <p v-if="['title', 'sku'].includes(field.handle)" class="text-xs text-red text-danger">This field is required</p>
             </div>
         </template>
     </div>

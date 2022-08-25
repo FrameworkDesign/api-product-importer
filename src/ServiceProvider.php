@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Statamic;
 use Weareframework\ApiProductImporter\Commands\Import\PullProductsFromApi;
-use Weareframework\ApiProductImporter\Fieldtypes\ApiProductDataImporterFieldType;
+use Weareframework\ApiProductImporter\Fieldtypes\ApiProductDataImporter;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -22,7 +22,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        ApiProductDataImporterFieldType::class
+        ApiProductDataImporter::class
     ];
 
 

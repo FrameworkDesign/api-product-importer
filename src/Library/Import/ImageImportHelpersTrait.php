@@ -3,6 +3,7 @@
 namespace  Weareframework\ApiProductImporter\Library\Import;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Statamic\Facades\AssetContainer;
@@ -14,12 +15,11 @@ trait ImageImportHelpersTrait
 
     private function importImages(): void
     {
-        if (! property_exists($this, 'blueprint') || !  property_exists($this, 'mappedData')) {
+        if (!property_exists($this, 'blueprint') || !property_exists($this, 'mappedData')) {
             return;
         }
 
         $fields = $this->blueprint->fields()->resolveFields()->toArray();
-
         $this->mappedData = $this->mappedData->map(function ($item, $handle) use($fields) {
             if (is_null($item)) {
                 return $item;
@@ -29,10 +29,19 @@ trait ImageImportHelpersTrait
                 return $value['type'] === 'assets' && $value['handle'] === $handle;
             });
 
-
             if (count($matches) > 0) {
                 $match = Arr::first($matches);
-                $item = $this->importImage($match, $item, $handle);
+                if (is_array($item)) {
+                    $newArray = [];
+                    foreach($item as $single) {
+                        $newArray[] = $this->importImage($match, $single, $handle);
+                    }
+
+                    $item = $newArray;
+                } else {
+                    $item = $this->importImage($match, $item, $handle);
+                }
+
             }
 
             return $item;
@@ -42,6 +51,7 @@ trait ImageImportHelpersTrait
 
     private function importImage($match, $item, $handle)
     {
+        $assetUrl = $item;
         return $this->downloadAsset($assetUrl ?? '', $this->collection);
     }
 
