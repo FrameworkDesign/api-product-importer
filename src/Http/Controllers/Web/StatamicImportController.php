@@ -91,7 +91,6 @@ class StatamicImportController extends CpController
         $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
         /** @var \Statamic\Fields\Blueprint $blueprint */
         $blueprint = $collectionModel->entryBlueprint($blueprintHandle);
-        Log::info(json_encode($blueprint->fields()->resolveFields()->toArray()));
 
         if ($collection === 'products') {
             $request->session()->put('api-product-statamic-data-import-type', 'simple');

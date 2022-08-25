@@ -85,14 +85,14 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
             ];
             $row = $this->apiProduct;
 
-            Log::info('$this->apiProduct ' . json_encode($this->apiProduct));
+//            Log::info('$this->apiProduct ' . json_encode($this->apiProduct));
 
             $this->mappedData = $this->mapping->map(function (string $rowKey) use ($row) {
                 $value = $row[$rowKey] ?? null;
                 return $value;
             });
 
-            Log::info('$this->mappedData ' . json_encode($this->mappedData));
+//            Log::info('$this->mappedData ' . json_encode($this->mappedData));
 
             if (
                 method_exists($this, 'importImages')
