@@ -12,16 +12,23 @@ class PullApiController extends CpController
 
     public function index(Request $request)
     {
-        Artisan::call('api-product-importer:products:import');
-        session()->now('success', __('Started, check back soon'));
-        session()->flash('Started, check back soon', __('api-product-importer-import'));
+        try {
+            Artisan::call('api-product-importer:products:import');
+            session()->flash('success', 'Started, check back soon');
+        } catch (\Exception $exception) {
+            session()->flash('error', $exception->getMessage());
+        }
         return redirect()->route('statamic.cp.weareframework.api-product-importer.dashboard.index');
     }
 
     public function delete(Request $request)
     {
-        session()->now('success', __('All Deleted'));
-        ApiProduct::whereNotNull('sku')->delete();
+        try {
+            session()->now('success', 'All Deleted');
+            ApiProduct::whereNotNull('sku')->delete();
+        } catch (\Exception $exception) {
+            session()->flash('error', $exception->getMessage());
+        }
         return redirect()->route('statamic.cp.weareframework.api-product-importer.dashboard.index');
     }
 

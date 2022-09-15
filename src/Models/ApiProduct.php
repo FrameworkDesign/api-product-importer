@@ -136,6 +136,8 @@ class ApiProduct extends Model
         'use_config_backorders' => 'boolean',
         'configurable_on' => 'json',
         'variant_colors' => 'array',
+        'product_material' => 'array',
+        'product_lining' => 'array',
         'product_panels' => 'array',
         'product_ventilation' => 'array',
         'product_collar' => 'array',
