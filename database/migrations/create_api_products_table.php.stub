@@ -27,6 +27,8 @@ class CreateApiProductsTable extends Migration
             $table->string('model_no')->nullable();
             $table->boolean('status')->default(1);
             $table->string('name')->nullable();
+            $table->string('title')->nullable();
+            $table->string('slug')->nullable();
             $table->longText('description')->nullable();
 
             // seo

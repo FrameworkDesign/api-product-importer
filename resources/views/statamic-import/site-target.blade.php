@@ -6,8 +6,11 @@
         {{ csrf_field() }}
 
         <header class="mb-3">
+            <h1 class="mb-1">Select target</h1>
             <div class="flex items-center justify-between">
-                <h1>Select target</h1>
+                <a href="{{ cp_route('weareframework.api-product-importer.dashboard.index') }}" class="btn">
+                    Back
+                </a>
                 <button class="btn-primary">Continue</button>
             </div>
         </header>

@@ -32,22 +32,25 @@ class ImportAllSimpleApiProductsToStatamic implements ShouldQueue
     private $collection;
     /** @var \Illuminate\Support\Collection */
     private $mapping;
+    private $customMapping;
 
     public function __construct(
         string $uuid,
         string $site,
         string $collection,
-        Collection $mapping
+        Collection $mapping,
+        Collection $customMapping
     ) {
         $this->uuid = $uuid;
         $this->site = $site;
         $this->collection = $collection;
         $this->mapping = $mapping;
+        $this->customMapping = $customMapping;
     }
 
     public function handle()
     {
-        $apiProducts = ApiProduct::whereNull('parent_sku')->where('type', 'simple')->get();
+        $apiProducts = ApiProduct::whereNull('parent_sku')->where('type', 'configurable')->get();
         $apiProductsCount = $apiProducts->count();
         Log::info('ImportAllSimpleApiProductsToStatamic Running - products: ' . $apiProductsCount);
 
@@ -71,6 +74,7 @@ class ImportAllSimpleApiProductsToStatamic implements ShouldQueue
                 $this->site,
                 $this->collection,
                 $this->mapping,
+                $this->customMapping,
                 $isLast
             );
         });

@@ -4,8 +4,8 @@
     <div class="flex items-center mb-3">
         <h1 class="flex-1">API Product Importer Settings</h1>
     </div>
-    <div class="flex items-center mb-3">
-        <p>Control your Product Importer general settings here. Make sure to read the instructions on each input.</p>
+    <div class="flex flex-col items-start justify-start mb-3">
+        <p class="mb-1">Control your Product Importer general settings here. Make sure to read the instructions on each input.</p>
         <a href="{{ cp_route('weareframework.api-product-importer.dashboard.index') }}" class="btn">Dashboard</a>
     </div>
 

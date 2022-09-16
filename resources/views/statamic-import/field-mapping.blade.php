@@ -6,8 +6,11 @@
         {{ csrf_field() }}
 
         <header class="mb-3">
+            <h1 class="mb-1">Map your data</h1>
             <div class="flex items-center justify-between">
-                <h1>Map your data</h1>
+                <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="btn">
+                    Back
+                </a>
                 <button class="btn-primary">Import</button>
             </div>
         </header>

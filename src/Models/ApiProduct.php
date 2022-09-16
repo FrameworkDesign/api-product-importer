@@ -21,6 +21,8 @@ class ApiProduct extends Model
         'model_no',
         'status',
         'name',
+        'title',
+        'slug',
         'description',
 
         // seo

@@ -39,7 +39,6 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
     /** @var \Illuminate\Support\Collection */
     private $customMapping;
     private $mapping;
-    private $mappedData;
 
     private $index;
     private $isLast;

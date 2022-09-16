@@ -55,71 +55,85 @@ class StatamicImportController extends CpController
 
     public function fieldMapping(Request $request)
     {
-        $handle = $request->get('collection');
-        $type = ($handle === 'products_with_variants') ? 'configurable' : 'simple';
-        $collection = Collection::findByHandle('products'); // $handle
-        $blueprintHandle = ($handle === 'products_with_variants') ? 'products_with_variants' : null;
-        /** @var \Statamic\Fields\Blueprint $blueprint */
-        $blueprint = $collection->entryBlueprint($blueprintHandle);
-        $fields = $blueprint->fields()->resolveFields()->toArray();
+        try {
+            $handle = $request->get('collection');
+            $type = ($handle === 'products_with_variants') ? 'configurable' : 'simple';
+            $collection = Collection::findByHandle('products'); // $handle
+            $blueprintHandle = ($handle === 'products_with_variants') ? 'products_with_variants' : 'products';
+            /** @var \Statamic\Fields\Blueprint $blueprint */
+            $blueprint = $collection->entryBlueprint($blueprintHandle);
+            if (is_null($blueprint)) {
+                throw new \Exception('No blueprint matches that name');
+            }
+            $fields = $blueprint->fields()->resolveFields()->toArray();
 
-        $request->session()->put('api-product-statamic-data-import-type', $type);
-        $request->session()->put('api-product-statamic-data-import-collection', $handle);
-        $request->session()->put('api-product-statamic-data-import-site', request('site'));
+            $request->session()->put('api-product-statamic-data-import-type', $type);
+            $request->session()->put('api-product-statamic-data-import-collection', $handle);
+            $request->session()->put('api-product-statamic-data-import-site', request('site'));
 
-        $keys = (new ApiProduct())->getFillableWithout();
+            $keys = (new ApiProduct())->getFillableWithout();
 
-        return view('api-product-importer::statamic-import.field-mapping', [
-            'type' => $type,
-            'keys' => $keys,
-            'fields' => $fields,
-        ]);
+            return view('api-product-importer::statamic-import.field-mapping', [
+                'type' => $type,
+                'keys' => $keys,
+                'fields' => $fields,
+            ]);
+        } catch(\Exception $exception) {
+            session()->flash('error', $exception->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function processImport(Request $request)
     {
-        cache()->forget("api-product-statamic-import-cleared");
-        $mapping = collect($request->get('mapping'))->filter();
-        $customMapping = ($request->has('custom_field_mapping')) ? collect($request->get('custom_field_mapping'))->filter() : null;
-        $collection = $request->session()->get('api-product-statamic-data-import-collection');
-        Log::info('processImport: ' . $collection);
-        $site = session()->get('api-product-statamic-data-import-site', Site::default()->handle());
-        $uuid = Str::uuid()->toString();
-        $request->session()->put('api-product-statamic-data-import-uuid', $uuid);
+        try {
+            cache()->forget("api-product-statamic-import-cleared");
+            $mapping = collect($request->get('mapping'))->filter();
+            $customMapping = ($request->has('custom_field_mapping')) ? collect($request->get('custom_field_mapping'))->filter() : null;
+            $collection = $request->session()->get('api-product-statamic-data-import-collection');
+            Log::info('processImport: ' . $collection);
+            $site = session()->get('api-product-statamic-data-import-site', Site::default()->handle());
+            $uuid = Str::uuid()->toString();
+            $request->session()->put('api-product-statamic-data-import-uuid', $uuid);
 
-        $collectionModel = Collection::findByHandle('products');
-        $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
-        /** @var \Statamic\Fields\Blueprint $blueprint */
-        $blueprint = $collectionModel->entryBlueprint($blueprintHandle);
+            $collectionModel = Collection::findByHandle('products');
+            $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
+            /** @var \Statamic\Fields\Blueprint $blueprint */
+            $blueprint = $collectionModel->entryBlueprint($blueprintHandle);
 
-        if ($collection === 'products') {
-            $request->session()->put('api-product-statamic-data-import-type', 'simple');
-            ImportAllSimpleApiProductsToStatamic::dispatch(
-                $uuid,
-                $site,
-                $collection,
-                $mapping
-            );
+            if ($collection === 'products') {
+                $request->session()->put('api-product-statamic-data-import-type', 'simple');
+                ImportAllSimpleApiProductsToStatamic::dispatch(
+                    $uuid,
+                    $site,
+                    $collection,
+                    $mapping,
+                    $customMapping
+                );
+            }
+
+            if ($collection === 'products_with_variants') {
+                $request->session()->put('api-product-statamic-data-import-type', 'configurable');
+                ImportAllConfigurableApiProductsToStatamic::dispatch(
+                    $uuid,
+                    $site,
+                    $collection,
+                    $mapping,
+                    $customMapping
+                );
+            }
+
+            $request->session()->forget('api-product-statamic-data-import-keys');
+            $request->session()->forget('api-product-statamic-data-import-collection');
+            $request->session()->forget('api-product-statamic-data-import-site');
+
+            session()->flash('success', 'Running');
+
+            return redirect(cp_route('weareframework.api-product-importer.statamic.finished'));
+        } catch(\Exception $exception) {
+            session()->flash('error', $exception->getMessage());
+            return redirect()->back();
         }
-
-        if ($collection === 'products_with_variants') {
-            $request->session()->put('api-product-statamic-data-import-type', 'configurable');
-            ImportAllConfigurableApiProductsToStatamic::dispatch(
-                $uuid,
-                $site,
-                $collection,
-                $mapping,
-                $customMapping
-            );
-        }
-
-        $request->session()->forget('api-product-statamic-data-import-keys');
-        $request->session()->forget('api-product-statamic-data-import-collection');
-        $request->session()->forget('api-product-statamic-data-import-site');
-
-        session()->flash('success', __('Running'));
-
-        return redirect(cp_route('weareframework.api-product-importer.statamic.finished'));
     }
 
     public function finished(Request $request)

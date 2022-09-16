@@ -63,6 +63,9 @@
             <a href="{{ cp_route('weareframework.api-product-importer.dashboard.index') }}" class="btn-primary">
                 Back to Dashboard
             </a>
+            <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="ml-2 text-white btn-primary">
+                Import Again
+            </a>
         </div>
     </form>
 @endsection
