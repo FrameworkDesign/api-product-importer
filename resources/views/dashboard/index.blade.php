@@ -26,7 +26,15 @@
                 <div class="mt-2">
                     <h3 class="font-bold">2. Import to Statamic</h3>
                     <p>Import API products into</p>
-                    <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="btn-primary">Statamic</a>
+                    <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="btn-primary">Import to Statamic</a>
+                </div>
+            @endif
+
+            @if($apiProducts->count() > 0)
+                <div class="mt-2">
+                    <h3 class="font-bold">3. Check Imported to Statamic</h3>
+                    <p>Imported API products status and info</p>
+                    <a href="{{ cp_route('weareframework.api-product-importer.statamic.finished') }}" class="btn-primary">Imported</a>
                 </div>
             @endif
         </div>
