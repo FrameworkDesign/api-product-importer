@@ -22,14 +22,14 @@ class StatamicImportController extends CpController
 
     public function siteTarget(Request $request)
     {
-//        $collections = Collection::all()->map(function ($collection) {
-//            return [
-//                'label' => $collection->title(),
-//                'value' => $collection->handle(),
-//            ];
-//        })->sortBy('label')->values()->toArray();
+        $collections = Collection::all()->map(function ($collection) {
+            return [
+                'label' => $collection->title(),
+                'value' => $collection->handle(),
+            ];
+        })->sortBy('label')->values()->toArray();
 
-        $collections = [
+        $collections2 = [
             [
                 'label' => 'Products',
                 'value' => 'products'

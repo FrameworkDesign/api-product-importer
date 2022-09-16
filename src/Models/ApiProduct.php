@@ -71,6 +71,7 @@ class ApiProduct extends Model
         'variant_colors',
 
         // sizing
+        'size',
         'size_uk',
         'size_fr',
         'size_intl',

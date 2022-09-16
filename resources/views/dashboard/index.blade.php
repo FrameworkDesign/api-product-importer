@@ -19,10 +19,11 @@
                     Delete All API Products
                 </a>
                 <br>
-                <p class="mt-.5">You have <strong>{{ $apiProducts->count() }}</strong> API products imported so far</p>
+                <p class="mt-.5">You have <strong>{{ $apiParentProducts->count() }}</strong> API products imported so far</p>
+                <p class="mt-.5"><strong>{{ $allApiProducts->count() }}</strong> API products and children/variants imported so far</p>
             </div>
 
-            @if($apiProducts->count() > 0)
+            @if($apiParentProducts->count() > 0)
                 <div class="mt-2">
                     <h3 class="font-bold">2. Import to Statamic</h3>
                     <p>Import API products into</p>
@@ -30,7 +31,7 @@
                 </div>
             @endif
 
-            @if($apiProducts->count() > 0)
+            @if($apiParentProducts->count() > 0)
                 <div class="mt-2">
                     <h3 class="font-bold">3. Check Imported to Statamic</h3>
                     <p>Imported API products status and info</p>

@@ -15,10 +15,12 @@ class DashboardController extends CpController
 
     public function index(Request $request, File $file)
     {
-        $apiProducts = ApiProduct::all('id');
+        $apiParentProducts = ApiProduct::whereNull('parent_sku')->get();
+        $allApiProducts = ApiProduct::all('id');
         $settings = (new CollectSettings($file))->handle();
         return view('api-product-importer::dashboard.index', [
-            'apiProducts' => $apiProducts,
+            'apiParentProducts' => $apiParentProducts,
+            'allApiProducts' => $allApiProducts,
             'settings' => $settings
         ]);
     }
