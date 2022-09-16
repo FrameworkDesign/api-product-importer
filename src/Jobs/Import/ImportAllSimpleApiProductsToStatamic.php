@@ -68,7 +68,7 @@ class ImportAllSimpleApiProductsToStatamic implements ShouldQueue
             Log::info('item: ' . $apiProduct->id);
             $isLast = ($index === ($apiProductsCount - 1));
 
-            if($apiProduct->title === 'Tractech Evo 4 CE Mens Leather Suit') {
+//            if($apiProduct->title === 'Tractech Evo 4 CE Mens Leather Suit') {
                 ImportSimpleApiProductToStatamic::dispatch(
                     $this->uuid,
                     $apiProduct->id,
@@ -79,7 +79,7 @@ class ImportAllSimpleApiProductsToStatamic implements ShouldQueue
                     $this->customMapping,
                     $isLast
                 );
-            }
+//            }
         });
     }
 }

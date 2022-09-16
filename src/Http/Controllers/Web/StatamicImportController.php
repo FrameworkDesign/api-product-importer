@@ -57,7 +57,7 @@ class StatamicImportController extends CpController
     {
         try {
             $handle = $request->get('collection');
-            $type = ($handle === 'products_with_variants') ? 'configurable' : 'simple';
+            $type = 'configurable';//($handle === 'products_with_variants') ? 'configurable' : 'simple';
             $collection = Collection::findByHandle('products'); // $handle
             $blueprintHandle = ($handle === 'products_with_variants') ? 'products_with_variants' : 'products';
             /** @var \Statamic\Fields\Blueprint $blueprint */
@@ -102,7 +102,7 @@ class StatamicImportController extends CpController
             $blueprint = $collectionModel->entryBlueprint($blueprintHandle);
 
             if ($collection === 'products') {
-                $request->session()->put('api-product-statamic-data-import-type', 'simple');
+                $request->session()->put('api-product-statamic-data-import-type', 'configurable');
                 ImportAllSimpleApiProductsToStatamic::dispatch(
                     $uuid,
                     $site,
