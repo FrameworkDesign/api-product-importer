@@ -23,7 +23,11 @@ Route::prefix('weareframework/api-product-importer')->group(function () {
     Route::get('/statamic/clear', ['\\'. StatamicImportController::class, 'clear'])->name('weareframework.api-product-importer.statamic.clear');
 
     Route::prefix('api')->group(function () {
-        Route::get('/', ['\\' . ApiImportController::class, 'index'])->name('weareframework.api-product-importer.api.imported.index');
+        Route::get('/', ['\\' . ApiImportController::class, 'index'])->name('weareframework.api-product-importer.api.index');
+
+        Route::get('/pull/{sku}', ['\\' . ApiImportController::class, 'pull'])->name('weareframework.api-product-importer.api.pull');
+        Route::post('/map/{sku}', ['\\' . ApiImportController::class, 'map'])->name('weareframework.api-product-importer.api.map');
+        Route::post('/store/{sku}', ['\\' . ApiImportController::class, 'store'])->name('weareframework.api-product-importer.api.store');
     });
 });
 

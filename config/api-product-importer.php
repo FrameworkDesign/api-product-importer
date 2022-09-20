@@ -48,16 +48,35 @@ return [
                     'display' => 'API Route settings',
                     'instructions' => 'Information as to where the API data is coming from'
                 ],
-                'api_product_importer_route' => [
+                'api_product_importer_products_all_route' => [
                     'type' => 'text',
                     'character_limit' => '500',
-                    'display' => 'API Route',
+                    'display' => 'API Route - All Products',
                     'instructions' => 'The URL of the API route',
                     'validate' => 'required|string|url',
                 ],
-                'api_product_importer_method' => [
+                'api_product_importer_products_all_method' => [
                     'type' => 'select',
-                    'display' => 'Route Method Type',
+                    'display' => 'Route Method Type for all',
+                    'instructions' => 'What method type?',
+                    'validate' => 'required|string',
+                    'options' => [
+                        'GET' => 'GET',
+                        'POST' => 'POST',
+                        'PATCH' => 'PATCH',
+                        'PUT' => 'PUT',
+                    ]
+                ],
+                'api_product_importer_products_single_route' => [
+                    'type' => 'text',
+                    'character_limit' => '500',
+                    'display' => 'API Route - Single Product',
+                    'instructions' => 'The URL of the API route for a single product. You can mimic variables with curly braces e.g. /single/{id}',
+                    'validate' => 'required|string',
+                ],
+                'api_product_importer_products_single_method' => [
+                    'type' => 'select',
+                    'display' => 'Route Method Type for single',
                     'instructions' => 'What method type?',
                     'validate' => 'required|string',
                     'options' => [

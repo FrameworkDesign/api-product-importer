@@ -6,7 +6,7 @@
         <h1 class="flex-1 font-bold">API Product Importer Dashboard</h1>
         <p>The flow of getting products into statamic is like so:</p>
     </div>
-    @if(isset($settings->values['api_product_importer_route']) && !is_null($settings->values['api_product_importer_route']) && !empty($settings->values['api_product_importer_route']))
+    @if(isset($settings->values['api_product_importer_products_all_route']) && !is_null($settings->values['api_product_importer_products_all_route']) && !empty($settings->values['api_product_importer_products_all_route']))
         <div class="mb-5">
             <div>
                 <h3 class="font-bold">1. API</h3>
@@ -43,7 +43,7 @@
         <div>
             <div class="mb-3">
 
-                @if(isset($settings->values['api_product_importer_route']) && is_null($settings->values['api_product_importer_route']) || empty($settings->values['api_product_importer_route']))
+                @if(isset($settings->values['api_product_importer_products_all_route']) && is_null($settings->values['api_product_importer_products_all_route']) || empty($settings->values['api_product_importer_products_all_route']))
                     <p class="font-bold">You need to fill out the importer route in settings</p>
                 @endif
 
@@ -59,11 +59,11 @@
                         <tbody>
                             <tr>
                                 <td>Route</td>
-                                <td>{{ $settings->values['api_product_importer_route'] ?? null }}</td>
+                                <td>{{ $settings->values['api_product_importer_products_all_route'] ?? null }}</td>
                             </tr>
                             <tr>
                                 <td>Method</td>
-                                <td>{{ $settings->values['api_product_importer_method'] ?? null }}</td>
+                                <td>{{ $settings->values['api_product_importer_products_all_method'] ?? null }}</td>
                             </tr>
                         </tbody>
                     </table>

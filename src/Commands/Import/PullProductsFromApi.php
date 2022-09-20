@@ -16,18 +16,15 @@ class PullProductsFromApi extends Command
     use RunsInPlease;
 
     protected $signature = 'api-product-importer:products:import';
-
     protected $description = 'Import via the API url the products into this system';
-
     protected $file;
-
 
     public function handle(File $file)
     {
         $this->file = $file;
         $this->info('Grabbing all products');
         $settings = (new CollectSettings($this->file))->handle();
-        $response = Http::get($settings->values['api_product_importer_route']);
+        $response = Http::get($settings->values['api_product_importer_products_all_route']);
 
         if ($response->successful()) {
             // import the punks

@@ -23,6 +23,7 @@
             </header>
             <h2 class="mb-3">Fieldset Data</h2>
             <map-collection-fields-panel
+                class="-mx-2"
                 name="mapping"
                 id="mapping"
                 :config="{

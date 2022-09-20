@@ -12,7 +12,7 @@ class GeneralError
             'data'     => null,
             'message'  => $exception->getMessage(),
             'info'     => false,
-            'error'    => static::returnDetails($exception),
+            'error'    => static::details($exception),
             'redirect' => null,
         ], $code);
     }

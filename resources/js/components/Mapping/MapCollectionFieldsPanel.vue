@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex flex-wrap -mx-2">
+    <div class="w-full flex flex-wrap ">
         <template v-for="field in config.fields">
             <div class="w-full flex flex-wrap px-2 py-4" v-if="field.handle === 'product_variants'">
                 <h3 class="w-full flex flex-wrap px-2 mb-2">Product Variant Fields</h3>
@@ -45,21 +45,25 @@ export default {
 
     mounted() {
         this.config.keys.forEach(key => {
-            const field = this.config.fields.filter(field => field.handle === key)[0];
+            const field = this.config.fields.filter(field => field.handle === key)[0]
 
             if (field) {
-                this.$set(this.mapping, field.handle, key);
-                this.$set(this.customMapping, field.handle, key);
+                this.$set(this.mapping, field.handle, key)
+                this.$emit('mapping', this.mapping)
+                this.$set(this.customMapping, field.handle, key)
+                this.$emit('custommapping', this.customMapping)
             }
         })
     },
 
     methods: {
         setMapping: function (handle, value) {
-            this.$set(this.mapping, handle, value);
+            this.$set(this.mapping, handle, value)
+            this.$emit('mapping', this.mapping)
         },
         setCustomFieldMapping: function (handle, value) {
-            this.$set(this.customMapping, handle, value);
+            this.$set(this.customMapping, handle, value)
+            this.$emit('custommapping', this.customMapping)
         },
     }
 }
