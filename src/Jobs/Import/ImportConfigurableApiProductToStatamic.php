@@ -195,7 +195,11 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
 
             if ($productExists->count() > 0) {
                 $type = 'update';
-                $entry = $productExists->first()->data(Arr::removeNullValues($this->mappedData->all()));
+                $entry = $productExists->first();//->data(Arr::removeNullValues($this->mappedData->all()));
+                foreach($this->mappedData as $key => $value) {
+                    $entry->set($key, $value);
+                }
+                
                 if (! $entry->save()) {
                     $this->failedRows[] = $row;
                     $this->errors[] = "[Row {$this->index}]: This updated product could not save";

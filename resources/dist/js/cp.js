@@ -126,8 +126,6 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     openModal: function openModal() {
       this.modalOpen = true;
-      console.log('this.sku', this.sku);
-      console.log('this.storeState.values.meta', this.$store.state.publish.base.meta);
     },
     closeModal: function closeModal() {
       this.modalOpen = false;
@@ -164,8 +162,6 @@ __webpack_require__.r(__webpack_exports__);
         mapping: this.mapping,
         custom_mapping: this.customMapping
       }).then(function (response) {
-        console.log(response.data);
-
         _this.$toast.success('Success! processing data. We will let you know when its finished');
 
         _this.pollFinished(response.data.data);
@@ -184,12 +180,10 @@ __webpack_require__.r(__webpack_exports__);
 
       setInterval(function () {
         _this2.$axios.get(cp_url("weareframework/api-product-importer/api/poll/".concat(uuid))).then(function (response) {
-          console.log(response.data, response.data.success);
-
           if (response.data.success == true) {
-            window.location.reload();
-
             _this2.$toast.success('Finished. Reloading page with new data');
+
+            window.location.reload();
           } else {
             _this2.$toast.warning('Still running');
           }
@@ -203,8 +197,6 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       this.$axios.get(cp_url("weareframework/api-product-importer/api/pull/".concat(this.sku))).then(function (response) {
-        console.log(response.data);
-
         if (response.data && response.data.product && response.data.success) {
           _this3.product = response.data.product;
           _this3.productDataCollected = true;
@@ -251,10 +243,22 @@ __webpack_require__.r(__webpack_exports__);
         _this.$set(_this.mapping, field.handle, key);
 
         _this.$emit('mapping', _this.mapping);
+      }
 
-        _this.$set(_this.customMapping, field.handle, key);
+      var variantBluePrint = _this.config.fields.filter(function (field) {
+        return field.type === 'product_variants';
+      })[0];
 
-        _this.$emit('custommapping', _this.customMapping);
+      if (variantBluePrint) {
+        var variantField = variantBluePrint.option_fields.filter(function (field) {
+          return field.handle === key;
+        })[0];
+
+        if (variantField) {
+          _this.$set(_this.customMapping, variantField.handle, key);
+
+          _this.$emit('custommapping', _this.customMapping);
+        }
       }
     });
   },
@@ -484,7 +488,7 @@ var render = function render() {
     on: {
       click: _vm.prevStep
     }
-  }, [_vm._v("\n                            Prev\n                        ")]) : _vm._e(), _vm._v(" "), _vm.step < 4 ? _c("button", {
+  }, [_vm._v("\n                            Prev\n                        ")]) : _vm._e(), _vm._v(" "), _vm.step < 4 && _vm.productDataCollected == true ? _c("button", {
     staticClass: "btn w-auto ml-auto flex justify-center items-center",
     on: {
       click: _vm.nextStep

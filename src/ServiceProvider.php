@@ -42,17 +42,6 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        Queue::after(function (JobProcessed $event) {
-            Log::info($event->connectionName . ' ' . class_basename($event->job) . ' ' . $event->job->getName() . ' ' . $event->job->resolveName());
-//            Log::info(json_encode($event->job->payload()));
-            // $event->connectionName
-            // $event->job
-            // $event->job->payload()
-            if($event->job->resolveName() == 'Weareframework\ApiProductImporter\Jobs\Import\ImportSimpleApiProductToStatamic') {
-                Session::put('api-product-statamic-data-import-single-finished', true);
-            }
-        });
-
         $this->commands([
             PullProductsFromApi::class,
         ]);

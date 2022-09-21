@@ -96,8 +96,6 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 return $value;
             });
 
-            Log::info('$this->mappedData ' . json_encode($this->mappedData));
-
             if (
                 method_exists($this, 'importImages')
                 && config('statamic.api-product-importer.download_images')
@@ -111,14 +109,9 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
             $productVariantOptions = [];
             $uniqueVariantNames = array_intersect($variants, $this->customMapping->all());
             $uniqueVariantNamesOutput = [];
-
-//            Log::info('product count: ' . $this->apiProduct->children->count());
-//            Log::info('$uniqueVariantNames ' . json_encode($uniqueVariantNames));
-//            Log::info('customMapping ' . json_encode($this->customMapping->all()));
-
             if ($this->apiProduct->children->count() > 0) {
                 foreach($this->apiProduct->children as $apiProductChild) {
-//                    Log::info('$apiProductChild ' . json_encode($apiProductChild));
+
                     $customMapped = $this->customMapping->map(function(string $rowKey) use($apiProductChild) {
                         $value = $apiProductChild[$rowKey] ?? null;
                         return $value;
@@ -128,8 +121,6 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                     $customMappedArray['price'] = $apiProductChild['price'];
                     $customMappedArray['key'] = $apiProductChild['sku'];
                     $customMappedArray['variant'] = $apiProductChild['sku'];
-
-//                    Log::info('$variants ' . json_encode($variants));
 
                     $productVariantOptions[] = $customMappedArray;
                     $valsForVariantName = [];
@@ -146,7 +137,6 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                     $customMappedArray['variant'] = implode(', ', $valsForVariantName);
                 }
 
-//                Log::info('$customMappedArray ' . count($customMappedArray) . ' ' . json_encode($customMappedArray));
                 $finalUniqueVariantNames = [];
                 foreach($uniqueVariantNamesOutput as $key => $uniqueVariantNamesOutputRow) {
                     $finalUniqueVariantNames[] = [
@@ -159,9 +149,6 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                     'variants' => $finalUniqueVariantNames,
                     'options' => $productVariantOptions
                 ];
-
-//                Log::info('$uniqueVariantNamesOutput ' . json_encode($uniqueVariantNamesOutput));
-//                Log::info('$finalUniqueVariantNames ' . json_encode($finalUniqueVariantNames));
 
             }
 
@@ -206,15 +193,17 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
 
             if ($productExists->count() > 0) {
                 $type = 'update';
-                $entry = $productExists->first()->data(Arr::removeNullValues($this->mappedData->all()));
+                $entry = $productExists->first();//->data(Arr::removeNullValues($this->mappedData->all()));
+                foreach($this->mappedData as $key => $value) {
+                    $entry->set($key, $value);
+                }
+
                 if (! $entry->save()) {
                     $this->failedRows[] = $row;
                     $this->errors[] = "[Row {$this->index}]: This updated product could not save";
                     Log::error("[Row {$this->index}]: This updated product could not save");
                 }
             }
-
-//            Log::info($type . ' - site: ' . $this->site . ' - collection:' . $this->collection . ' - title: ' . $title);
 
             cache()->increment("{$this->uuid}-api-product-statamic-import-processed");
             cache()->put("{$this->uuid}-api-product-statamic-import-errors", $this->errors);
@@ -224,7 +213,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 cache()->put("{$this->uuid}-api-product-statamic-import-finished", true);
             }
 
-//            Log::info('ImportSimpleApiProductToStatamic->handle FINISH ' . $this->index);
+            Log::info('ImportSimpleApiProductToStatamic->handle FINISH ' . $this->index);
             return;
         } catch(\Exception $exception) {
             Log::info('ImportSimpleApiProductToStatamic error ' . $exception->getFile() . ' ' . $exception->getLine());
@@ -232,6 +221,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
 
             cache()->put("{$this->uuid}-api-product-statamic-import-errors", $this->errors);
             cache()->put("{$this->uuid}-api-product-statamic-import-failed", $this->failedRows);
+            return;
         }
     }
 

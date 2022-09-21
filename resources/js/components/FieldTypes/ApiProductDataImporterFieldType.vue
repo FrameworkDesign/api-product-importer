@@ -112,7 +112,7 @@
                                 Prev
                             </button>
 
-                            <button v-if="step < 4" class="btn w-auto ml-auto flex justify-center items-center" @click="nextStep">
+                            <button v-if="step < 4 && productDataCollected == true" class="btn w-auto ml-auto flex justify-center items-center" @click="nextStep">
                                 Next
                             </button>
                         </div>
@@ -160,8 +160,6 @@ export default {
     methods: {
         openModal() {
             this.modalOpen = true
-            console.log('this.sku', this.sku)
-            console.log('this.storeState.values.meta', this.$store.state.publish.base.meta)
         },
         closeModal() {
             this.modalOpen = false
@@ -196,7 +194,6 @@ export default {
                 mapping: this.mapping,
                 custom_mapping: this.customMapping,
             }).then(response => {
-                console.log(response.data)
                 this.$toast.success('Success! processing data. We will let you know when its finished')
                 this.pollFinished(response.data.data)
                 this.pollChecking = true
@@ -214,10 +211,9 @@ export default {
             setInterval(() => {
                 this.$axios.get(cp_url(`weareframework/api-product-importer/api/poll/${uuid}`))
                     .then(response => {
-                        console.log(response.data, response.data.success)
                         if(response.data.success == true) {
-                            window.location.reload()
                             this.$toast.success('Finished. Reloading page with new data')
+                            window.location.reload()
                         } else {
                             this.$toast.warning('Still running')
                         }
@@ -229,7 +225,7 @@ export default {
         getLatestData() {
             this.loading = true
             this.$axios.get(cp_url(`weareframework/api-product-importer/api/pull/${this.sku}`)).then(response => {
-                console.log(response.data)
+
                 if (response.data && response.data.product && response.data.success) {
                     this.product = response.data.product
                     this.productDataCollected = true

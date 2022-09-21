@@ -51,8 +51,15 @@ export default {
             if (field) {
                 this.$set(this.mapping, field.handle, key)
                 this.$emit('mapping', this.mapping)
-                this.$set(this.customMapping, field.handle, key)
-                this.$emit('custommapping', this.customMapping)
+            }
+
+            const variantBluePrint = this.config.fields.filter(field => field.type === 'product_variants')[0]
+            if(variantBluePrint) {
+                const variantField = variantBluePrint.option_fields.filter(field => field.handle === key)[0]
+                if(variantField) {
+                    this.$set(this.customMapping, variantField.handle, key)
+                    this.$emit('custommapping', this.customMapping)
+                }
             }
         })
     },
