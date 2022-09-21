@@ -118,7 +118,7 @@ class ApiImportController extends CpController
             $site = Site::default()->handle();
             $collection = $request->get('collection');
             $mapping = collect($request->get('mapping'))->filter();
-            $customMapping = ($request->has('custom_mapping')) ? collect($request->get('custom_mapping'))->filter() : null;
+            $customMapping = ($request->has('custom_mapping')) ? collect($request->get('custom_mapping'))->filter() : collect([]);
 
             ImportSimpleApiProductToStatamic::dispatch(
                 $uuid,

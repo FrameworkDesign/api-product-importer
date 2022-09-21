@@ -199,7 +199,7 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                 foreach($this->mappedData as $key => $value) {
                     $entry->set($key, $value);
                 }
-                
+
                 if (! $entry->save()) {
                     $this->failedRows[] = $row;
                     $this->errors[] = "[Row {$this->index}]: This updated product could not save";

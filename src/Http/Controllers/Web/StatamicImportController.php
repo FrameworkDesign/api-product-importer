@@ -89,7 +89,7 @@ class StatamicImportController extends CpController
         try {
             cache()->forget("api-product-statamic-import-cleared");
             $mapping = collect($request->get('mapping'))->filter();
-            $customMapping = ($request->has('custom_field_mapping')) ? collect($request->get('custom_field_mapping'))->filter() : null;
+            $customMapping = ($request->has('custom_field_mapping')) ? collect($request->get('custom_field_mapping'))->filter() : collect([]);
             $collection = $request->session()->get('api-product-statamic-data-import-collection');
             Log::info('processImport: ' . $collection);
             $site = session()->get('api-product-statamic-data-import-site', Site::default()->handle());
