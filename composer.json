@@ -15,5 +15,8 @@
                 "Weareframework\\ApiProductImporter\\ServiceProvider"
             ]
         }
+    },
+    "require": {
+        "spatie/simple-excel": "^2.2"
     }
 }

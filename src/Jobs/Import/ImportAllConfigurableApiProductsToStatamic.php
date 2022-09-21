@@ -65,7 +65,6 @@ class ImportAllConfigurableApiProductsToStatamic implements ShouldQueue
         cache()->put("{$this->uuid}-api-product-statamic-import-failed", $failedRows);
 
         $apiProducts->each(function ($apiProduct, $index) use($apiProductsCount) {
-            Log::info('item: ' . $apiProduct->id);
             $isLast = ($index === ($apiProductsCount - 1));
             ImportConfigurableApiProductToStatamic::dispatch(
                 $this->uuid,

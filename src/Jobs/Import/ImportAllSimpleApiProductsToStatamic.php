@@ -65,21 +65,17 @@ class ImportAllSimpleApiProductsToStatamic implements ShouldQueue
         cache()->put("{$this->uuid}-api-product-statamic-import-failed", $failedRows);
 
         $apiProducts->each(function ($apiProduct, $index) use($apiProductsCount) {
-            Log::info('item: ' . $apiProduct->id);
             $isLast = ($index === ($apiProductsCount - 1));
-
-//            if($apiProduct->title === 'Tractech Evo 4 CE Mens Leather Suit') {
-                ImportSimpleApiProductToStatamic::dispatch(
-                    $this->uuid,
-                    $apiProduct->id,
-                    $index,
-                    $this->site,
-                    $this->collection,
-                    $this->mapping,
-                    $this->customMapping,
-                    $isLast
-                );
-//            }
+            ImportSimpleApiProductToStatamic::dispatch(
+                $this->uuid,
+                $apiProduct->id,
+                $index,
+                $this->site,
+                $this->collection,
+                $this->mapping,
+                $this->customMapping,
+                $isLast
+            );
         });
     }
 }
