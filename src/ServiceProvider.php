@@ -2,12 +2,17 @@
 
 namespace Weareframework\ApiProductImporter;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Facades\CP\Nav;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Statamic\Statamic;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 use Weareframework\ApiProductImporter\Commands\Import\PullProductsFromApi;
 use Weareframework\ApiProductImporter\Fieldtypes\ApiProductDataImporter;
 
@@ -37,6 +42,17 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
+        Queue::after(function (JobProcessed $event) {
+            Log::info($event->connectionName . ' ' . class_basename($event->job) . ' ' . $event->job->getName() . ' ' . $event->job->resolveName());
+//            Log::info(json_encode($event->job->payload()));
+            // $event->connectionName
+            // $event->job
+            // $event->job->payload()
+            if($event->job->resolveName() == 'Weareframework\ApiProductImporter\Jobs\Import\ImportSimpleApiProductToStatamic') {
+                Session::put('api-product-statamic-data-import-single-finished', true);
+            }
+        });
+
         $this->commands([
             PullProductsFromApi::class,
         ]);

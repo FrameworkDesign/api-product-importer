@@ -119,7 +119,8 @@ __webpack_require__.r(__webpack_exports__);
       fieldMappingConfig: {},
       mapping: {},
       customMapping: {},
-      finished: false
+      finished: false,
+      pollChecking: false
     };
   },
   methods: {
@@ -139,6 +140,7 @@ __webpack_require__.r(__webpack_exports__);
       this.mapping = {};
       this.customMapping = {};
       this.finished = false;
+      this.pollChecking = false;
     },
     nextStep: function nextStep() {
       this.step++;
@@ -153,23 +155,64 @@ __webpack_require__.r(__webpack_exports__);
       this.customMapping = customMapping;
     },
     commitChanges: function commitChanges() {
-      console.log('committted');
+      var _this = this;
+
+      this.loading = true;
+      this.$axios.post(cp_url("weareframework/api-product-importer/api/store/".concat(this.sku)), {
+        site: this.$store.state.publish.base.site,
+        collection: this.$store.state.publish.base.blueprint.handle,
+        mapping: this.mapping,
+        custom_mapping: this.customMapping
+      }).then(function (response) {
+        console.log(response.data);
+
+        _this.$toast.success('Success! processing data. We will let you know when its finished');
+
+        _this.pollFinished(response.data.data);
+
+        _this.pollChecking = true;
+      })["catch"](function (error) {
+        _this.$toast.error('Something went wrong');
+      })["finally"](function () {
+        setTimeout(function () {
+          _this.loading = false;
+        }, 200);
+      });
+    },
+    pollFinished: function pollFinished(uuid) {
+      var _this2 = this;
+
+      setInterval(function () {
+        _this2.$axios.get(cp_url("weareframework/api-product-importer/api/poll/".concat(uuid))).then(function (response) {
+          console.log(response.data, response.data.success);
+
+          if (response.data.success == true) {
+            window.location.reload();
+
+            _this2.$toast.success('Finished. Reloading page with new data');
+          } else {
+            _this2.$toast.warning('Still running');
+          }
+        })["catch"](function (error) {
+          _this2.$toast.error('Something went wrong');
+        });
+      }, 5000);
     },
     getLatestData: function getLatestData() {
-      var _this = this;
+      var _this3 = this;
 
       this.loading = true;
       this.$axios.get(cp_url("weareframework/api-product-importer/api/pull/".concat(this.sku))).then(function (response) {
         console.log(response.data);
 
         if (response.data && response.data.product && response.data.success) {
-          _this.product = response.data.product;
-          _this.productDataCollected = true;
-          _this.fieldMappingConfig = response.data.mapping;
+          _this3.product = response.data.product;
+          _this3.productDataCollected = true;
+          _this3.fieldMappingConfig = response.data.mapping;
         }
       })["finally"](function () {
         setTimeout(function () {
-          _this.loading = false;
+          _this3.loading = false;
         }, 200);
       });
     }
@@ -323,20 +366,20 @@ var render = function render() {
       "max-height": "400px"
     }
   }, [_c("h3", [_vm._v("Mapping")]), _vm._v(" "), _c("div", {
-    staticClass: "flex justify-between"
+    staticClass: "flex justify-between mapping-header-row"
   }, [_c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0",
     staticStyle: {
       width: "150px"
     }
   }, [_c("strong", [_vm._v("Field")])]), _vm._v(" "), _c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0 border-l border-grey-60",
     staticStyle: {
       width: "45%",
       "padding-right": "1%"
     }
   }, [_c("strong", [_vm._v("Current value")])]), _vm._v(" "), _c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0 border-l border-grey-60",
     staticStyle: {
       width: "45%"
     }
@@ -344,7 +387,7 @@ var render = function render() {
     return [_c("div", {
       staticClass: "flex justify-between field-row"
     }, [_c("p", {
-      staticClass: "p-.5 font-bold",
+      staticClass: "p-.5 mb-0 break-all font-bold",
       staticStyle: {
         width: "150px"
       },
@@ -352,7 +395,7 @@ var render = function render() {
         textContent: _vm._s(field)
       }
     }), _vm._v(" "), _c("p", {
-      staticClass: "p-.5",
+      staticClass: "p-.5 mb-0 border-l border-grey-50",
       staticStyle: {
         width: "45%",
         "padding-right": "1%"
@@ -361,7 +404,7 @@ var render = function render() {
         textContent: _vm._s(_vm.currentProductValues[field])
       }
     }), _vm._v(" "), _c("p", {
-      staticClass: "p-.5",
+      staticClass: "p-.5 mb-0 border-l border-grey-50 break-all",
       staticStyle: {
         width: "45%"
       },
@@ -372,20 +415,20 @@ var render = function render() {
   }), _vm._v(" "), _c("h3", {
     staticClass: "mt-2"
   }, [_vm._v("Custom Mapping")]), _vm._v(" "), _c("div", {
-    staticClass: "flex justify-between"
+    staticClass: "flex justify-between mapping-header-row"
   }, [_c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0",
     staticStyle: {
-      width: "100px"
+      width: "150px"
     }
   }, [_c("strong", [_vm._v("Field")])]), _vm._v(" "), _c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0 border-l border-grey-60",
     staticStyle: {
       width: "45%",
       "padding-right": "1%"
     }
   }, [_c("strong", [_vm._v("Current value")])]), _vm._v(" "), _c("p", {
-    staticClass: "p-.5",
+    staticClass: "p-.5 mb-0 border-l border-grey-60",
     staticStyle: {
       width: "45%"
     }
@@ -393,7 +436,7 @@ var render = function render() {
     return [_c("div", {
       staticClass: "flex justify-between field-row"
     }, [_c("p", {
-      staticClass: "p-.5 font-bold",
+      staticClass: "p-.5 mb-0 break-all font-bold",
       staticStyle: {
         width: "150px"
       },
@@ -401,7 +444,7 @@ var render = function render() {
         textContent: _vm._s(field)
       }
     }), _vm._v(" "), _c("p", {
-      staticClass: "p-.5",
+      staticClass: "p-.5 mb-0 border-l border-grey-50",
       staticStyle: {
         width: "45%",
         "padding-right": "1%"
@@ -410,7 +453,7 @@ var render = function render() {
         textContent: _vm._s(_vm.currentProductValues[field])
       }
     }), _vm._v(" "), _c("p", {
-      staticClass: "p-.5",
+      staticClass: "p-.5 mb-0 border-l border-grey-50 break-all",
       staticStyle: {
         width: "45%"
       },
@@ -419,11 +462,13 @@ var render = function render() {
       }
     })])];
   })], 2)]) : _vm._e(), _vm._v(" "), _vm.step === 4 ? _c("div", [_c("p", [_vm._v("4. commit/discard new changes")]), _vm._v(" "), !_vm.finished ? _c("button", {
-    staticClass: "btn-primary w-auto flex justify-center items-center",
+    staticClass: "btn-primary w-auto mb-1 flex justify-center items-center",
     on: {
       click: _vm.commitChanges
     }
-  }, [_vm._v("\n                            Commit Changes\n                        ")]) : _vm._e(), _vm._v(" "), _vm.finished ? _c("button", {
+  }, [_vm._v("\n                            Commit Changes\n                        ")]) : _vm._e(), _vm._v(" "), _vm.pollChecking ? _c("p", {
+    staticClass: "mb-1"
+  }, [_vm._v("Checking...")]) : _vm._e(), _vm._v(" "), _vm.finished ? _c("button", {
     staticClass: "btn-primary w-auto flex justify-center items-center",
     on: {
       click: _vm.closeModal
@@ -434,7 +479,7 @@ var render = function render() {
     staticClass: "api-product-data-loader"
   }) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "mt-2 flex justify-between items-center"
-  }, [_vm.step > 0 ? _c("button", {
+  }, [_vm.step > 1 ? _c("button", {
     staticClass: "btn-primary w-auto mr-auto flex justify-center items-center",
     on: {
       click: _vm.prevStep
@@ -499,7 +544,9 @@ var render = function render() {
         domProps: {
           value: _vm.customMapping[customField.handle]
         }
-      })], 1);
+      }), _vm._v(" "), ["sku", "color", "size"].includes(customField.handle) ? _c("p", {
+        staticClass: "text-xs text-red text-danger"
+      }, [_vm._v("This field is required")]) : _vm._e()], 1);
     })], 2) : _c("div", {
       staticClass: "w-1/2 px-2 mb-2"
     }, [_c("label", {
@@ -547,7 +594,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.api-product-data-loader,\n.api-product-data-loader:after {\n    border-radius: 50%;\n    width: 4em;\n    height: 4em;\n}\n.api-product-data-loader {\n    font-size: 7px;\n    position: relative;\n    text-indent: -9999em;\n    border-top: 0.75em solid rgba(0, 0, 0, 0.2);\n    border-right: 0.75em solid currentColor;\n    border-bottom: 0.75em solid currentColor;\n    border-left: 0.75em solid currentColor;\n    transform: translateZ(0);\n    animation: api-product-data-loader 1.1s infinite linear;\n}\n@keyframes api-product-data-loader {\n0% {\n        transform: rotate(0deg);\n}\n100% {\n        transform: rotate(360deg);\n}\n}\n.field-row:nth-child(odd) {\n    background-color: #f4f4f4;\n}\n", ""]);
+exports.push([module.i, "\n.api-product-data-loader,\n.api-product-data-loader:after {\n    border-radius: 50%;\n    width: 4em;\n    height: 4em;\n}\n.api-product-data-loader {\n    font-size: 7px;\n    position: relative;\n    text-indent: -9999em;\n    border-top: 0.75em solid rgba(0, 0, 0, 0.2);\n    border-right: 0.75em solid currentColor;\n    border-bottom: 0.75em solid currentColor;\n    border-left: 0.75em solid currentColor;\n    transform: translateZ(0);\n    animation: api-product-data-loader 1.1s infinite linear;\n}\n@keyframes api-product-data-loader {\n0% {\n        transform: rotate(0deg);\n}\n100% {\n        transform: rotate(360deg);\n}\n}\n.field-row:nth-child(odd) {\n    background-color: #f4f4f4;\n}\n.mapping-header-row {\n    border-top: 1px solid #d3d3d3;\n}\n.field-row {\n    border-bottom: 1px solid #c4ccd4;\n}\n", ""]);
 
 // exports
 

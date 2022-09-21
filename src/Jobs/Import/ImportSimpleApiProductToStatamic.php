@@ -118,7 +118,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
 
             if ($this->apiProduct->children->count() > 0) {
                 foreach($this->apiProduct->children as $apiProductChild) {
-                    Log::info('$apiProductChild ' . json_encode($apiProductChild));
+//                    Log::info('$apiProductChild ' . json_encode($apiProductChild));
                     $customMapped = $this->customMapping->map(function(string $rowKey) use($apiProductChild) {
                         $value = $apiProductChild[$rowKey] ?? null;
                         return $value;
@@ -146,8 +146,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                     $customMappedArray['variant'] = implode(', ', $valsForVariantName);
                 }
 
-                Log::info('$customMappedArray ' . count($customMappedArray) . ' ' . json_encode($customMappedArray));
-
+//                Log::info('$customMappedArray ' . count($customMappedArray) . ' ' . json_encode($customMappedArray));
                 $finalUniqueVariantNames = [];
                 foreach($uniqueVariantNamesOutput as $key => $uniqueVariantNamesOutputRow) {
                     $finalUniqueVariantNames[] = [
@@ -167,7 +166,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
             }
 
 
-//            Log::info('$this->mappedData ' . json_encode($this->mappedData->toArray()));
+            Log::info('$this->mappedData ' . json_encode($this->mappedData->toArray()));
 
             $slug = $this->mappedData->get('slug');
             $title = $this->mappedData->get('title');

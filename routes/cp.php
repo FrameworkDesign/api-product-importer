@@ -26,8 +26,8 @@ Route::prefix('weareframework/api-product-importer')->group(function () {
         Route::get('/', ['\\' . ApiImportController::class, 'index'])->name('weareframework.api-product-importer.api.index');
 
         Route::get('/pull/{sku}', ['\\' . ApiImportController::class, 'pull'])->name('weareframework.api-product-importer.api.pull');
-        Route::post('/map/{sku}', ['\\' . ApiImportController::class, 'map'])->name('weareframework.api-product-importer.api.map');
         Route::post('/store/{sku}', ['\\' . ApiImportController::class, 'store'])->name('weareframework.api-product-importer.api.store');
+        Route::get('/poll/{uuid}', ['\\' . ApiImportController::class, 'poll'])->name('weareframework.api-product-importer.api.poll');
     });
 });
 

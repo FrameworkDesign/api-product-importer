@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\UploadedFile;
 use Statamic\Http\Controllers\CP\CpController;
 use Weareframework\ApiProductImporter\Actions\Products\ImportApiProductAction;
+use Weareframework\ApiProductImporter\Jobs\Import\ImportSimpleApiProductToStatamic;
 use Weareframework\ApiProductImporter\Jobs\Pull\ImportApiProduct;
 use Weareframework\ApiProductImporter\Library\Errors\GeneralError;
 use Weareframework\ApiProductImporter\Library\Settings\CollectSettings;
@@ -88,12 +89,16 @@ class ApiImportController extends CpController
         }
     }
 
-    public function map(Request $request)
+    public function poll($uuid, Request $request)
     {
         try {
+            $outcome = cache()->get("{$uuid}-api-product-statamic-import-finished");
+            if ($outcome === true) {
+                cache()->forget("{$uuid}-api-product-statamic-import-finished");
+            }
             return response()->json([
-                'success' => true,
-                'message' => 'map',
+                'success' => $outcome,
+                'message' => ($outcome === true) ? 'Success' : 'Not finished',
                 'data' => null
             ]);
         } catch (\Exception $exception) {
@@ -101,13 +106,34 @@ class ApiImportController extends CpController
         }
     }
 
-    public function store(Request $request)
+    public function store($sku, Request $request)
     {
         try {
+            $uuid = Str::uuid()->toString();
+            $apiProduct = ApiProduct::where('sku', $sku)->get()->first();
+            if (is_null($apiProduct)) {
+                throw new \Exception('Product with that SKU not found to import');
+            }
+
+            $site = Site::default()->handle();
+            $collection = $request->get('collection');
+            $mapping = collect($request->get('mapping'))->filter();
+            $customMapping = ($request->has('custom_mapping')) ? collect($request->get('custom_mapping'))->filter() : null;
+
+            ImportSimpleApiProductToStatamic::dispatch(
+                $uuid,
+                $apiProduct->id,
+                0,
+                $site,
+                $collection,
+                $mapping,
+                $customMapping,
+                $isLast = true
+            );
             return response()->json([
                 'success' => true,
                 'message' => 'store',
-                'data' => null
+                'data' => $uuid
             ]);
         } catch (\Exception $exception) {
             return GeneralError::api($exception);

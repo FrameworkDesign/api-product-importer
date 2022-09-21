@@ -13,6 +13,7 @@
                     />
                     <input type="hidden" :name="'custom_field_mapping[' + customField.handle + ']'"
                            :value="customMapping[customField.handle]">
+                    <p v-if="['sku', 'color', 'size'].includes(customField.handle)" class="text-xs text-red text-danger">This field is required</p>
                 </div>
             </div>
             <div class="w-1/2 px-2 mb-2" v-else>

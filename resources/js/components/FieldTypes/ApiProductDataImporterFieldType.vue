@@ -55,30 +55,30 @@
 
                             <div style="overflow-y: scroll; max-height: 400px;">
                                 <h3>Mapping</h3>
-                                <div class="flex justify-between">
-                                    <p class="p-.5" style="width:150px;"><strong>Field</strong></p>
-                                    <p class="p-.5" style="width:45%; padding-right: 1%;"><strong>Current value</strong></p>
-                                    <p class="p-.5" style="width:45%;"><strong>New value</strong></p>
+                                <div class="flex justify-between mapping-header-row">
+                                    <p class="p-.5 mb-0" style="width:150px;"><strong>Field</strong></p>
+                                    <p class="p-.5 mb-0 border-l border-grey-60" style="width:45%; padding-right: 1%;"><strong>Current value</strong></p>
+                                    <p class="p-.5 mb-0 border-l border-grey-60" style="width:45%;"><strong>New value</strong></p>
                                 </div>
                                 <template v-for="field in mapping">
                                     <div class="flex justify-between field-row">
-                                        <p class="p-.5 font-bold" style="width:150px;" v-text="field"></p>
-                                        <p class="p-.5" style="width:45%; padding-right: 1%;" v-text="currentProductValues[field]"></p>
-                                        <p class="p-.5" style="width:45%;" v-text="product[field]"></p>
+                                        <p class="p-.5 mb-0 break-all font-bold" style="width:150px;" v-text="field"></p>
+                                        <p class="p-.5 mb-0 border-l border-grey-50" style="width:45%; padding-right: 1%;" v-text="currentProductValues[field]"></p>
+                                        <p class="p-.5 mb-0 border-l border-grey-50 break-all" style="width:45%;" v-text="product[field]"></p>
                                     </div>
                                 </template>
 
                                 <h3 class="mt-2">Custom Mapping</h3>
-                                <div class="flex justify-between">
-                                    <p class="p-.5" style="width:100px;"><strong>Field</strong></p>
-                                    <p class="p-.5" style="width:45%; padding-right: 1%;"><strong>Current value</strong></p>
-                                    <p class="p-.5" style="width:45%;"><strong>New value</strong></p>
+                                <div class="flex justify-between mapping-header-row">
+                                    <p class="p-.5 mb-0" style="width:150px;"><strong>Field</strong></p>
+                                    <p class="p-.5 mb-0 border-l border-grey-60" style="width:45%; padding-right: 1%;"><strong>Current value</strong></p>
+                                    <p class="p-.5 mb-0 border-l border-grey-60" style="width:45%;"><strong>New value</strong></p>
                                 </div>
                                 <template v-for="field in customMapping">
                                     <div class="flex justify-between field-row">
-                                        <p class="p-.5 font-bold"  style="width:150px;" v-text="field"></p>
-                                        <p class="p-.5" style="width:45%; padding-right: 1%;" v-text="currentProductValues[field]"></p>
-                                        <p class="p-.5" style="width:45%;" v-text="product[field]"></p>
+                                        <p class="p-.5 mb-0 break-all font-bold"  style="width:150px;" v-text="field"></p>
+                                        <p class="p-.5 mb-0 border-l border-grey-50" style="width:45%; padding-right: 1%;" v-text="currentProductValues[field]"></p>
+                                        <p class="p-.5 mb-0 border-l border-grey-50 break-all" style="width:45%;" v-text="product[field]"></p>
                                     </div>
                                 </template>
                             </div>
@@ -88,11 +88,12 @@
 
                             <button
                                 v-if="!finished"
-                                class="btn-primary w-auto flex justify-center items-center"
+                                class="btn-primary w-auto mb-1 flex justify-center items-center"
                                 @click="commitChanges"
                             >
                                 Commit Changes
                             </button>
+                            <p v-if="pollChecking" class="mb-1">Checking...</p>
                             <button
                                 v-if="finished"
                                 class="btn-primary w-auto flex justify-center items-center"
@@ -107,7 +108,7 @@
                         </div>
 
                         <div class="mt-2 flex justify-between items-center">
-                            <button v-if="step > 0" class="btn-primary w-auto mr-auto flex justify-center items-center" @click="prevStep">
+                            <button v-if="step > 1" class="btn-primary w-auto mr-auto flex justify-center items-center" @click="prevStep">
                                 Prev
                             </button>
 
@@ -151,7 +152,8 @@ export default {
             fieldMappingConfig: {},
             mapping: {},
             customMapping: {},
-            finished: false
+            finished: false,
+            pollChecking: false
         };
     },
 
@@ -172,6 +174,7 @@ export default {
             this.mapping = {}
             this.customMapping = {}
             this.finished = false
+            this.pollChecking = false
         },
         nextStep() {
             this.step++
@@ -186,7 +189,42 @@ export default {
             this.customMapping = customMapping
         },
         commitChanges() {
-            console.log('committted')
+            this.loading = true
+            this.$axios.post(cp_url(`weareframework/api-product-importer/api/store/${this.sku}`), {
+                site: this.$store.state.publish.base.site,
+                collection: this.$store.state.publish.base.blueprint.handle,
+                mapping: this.mapping,
+                custom_mapping: this.customMapping,
+            }).then(response => {
+                console.log(response.data)
+                this.$toast.success('Success! processing data. We will let you know when its finished')
+                this.pollFinished(response.data.data)
+                this.pollChecking = true
+            })
+            .catch((error) => {
+                this.$toast.error('Something went wrong')
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    this.loading = false
+                }, 200)
+            })
+        },
+        pollFinished(uuid) {
+            setInterval(() => {
+                this.$axios.get(cp_url(`weareframework/api-product-importer/api/poll/${uuid}`))
+                    .then(response => {
+                        console.log(response.data, response.data.success)
+                        if(response.data.success == true) {
+                            window.location.reload()
+                            this.$toast.success('Finished. Reloading page with new data')
+                        } else {
+                            this.$toast.warning('Still running')
+                        }
+                    }).catch(error => {
+                        this.$toast.error('Something went wrong')
+                    })
+            }, 5000);
         },
         getLatestData() {
             this.loading = true
@@ -238,5 +276,12 @@ export default {
 
 .field-row:nth-child(odd) {
     background-color: #f4f4f4;
+}
+.mapping-header-row {
+    border-top: 1px solid #d3d3d3;
+}
+
+.field-row {
+    border-bottom: 1px solid #c4ccd4;
 }
 </style>
