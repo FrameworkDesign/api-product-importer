@@ -170,6 +170,8 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.pollChecking = true;
       })["catch"](function (error) {
+        console.log(error.response);
+
         _this.$toast.error('Something went wrong');
       })["finally"](function () {
         setTimeout(function () {
@@ -192,7 +194,7 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (error) {
           console.log(error.response);
 
-          _this2.$toast.error('Something went wrong');
+          _this2.$toast.error('Something has gone wrong. Please try again');
 
           _this2.clearIntervalNow();
         });
