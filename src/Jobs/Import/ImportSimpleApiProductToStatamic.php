@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\SimpleExcel\SimpleExcelReader;
 use Statamic\Assets\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection as CollectionFacade;

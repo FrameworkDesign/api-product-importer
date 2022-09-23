@@ -16,6 +16,7 @@ return [
      * The name of the assets container where images should be downloaded.
      */
     'assets_container' => 'assets',
+    'resize_pixels' => env('API_IMPORTER_RESIZE_PIXELS', 1000),
 
     /*
      * Enable downloading of featured image. The default is 'true'.

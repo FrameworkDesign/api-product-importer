@@ -17,6 +17,6 @@
         }
     },
     "require": {
-        "spatie/simple-excel": "^2.2"
+        "intervention/image": "^2.7"
     }
 }

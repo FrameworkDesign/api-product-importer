@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Statamic\Facades\AssetContainer;
 use Statamic\Support\Arr;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Intervention\Image\ImageManagerStatic as InterventionImage;
 
 trait ImageImportHelpersTrait
 {
@@ -65,11 +66,13 @@ trait ImageImportHelpersTrait
             $image = Http::retry(3, 500)->get($url)->body();
 
             $originalImageName = basename($url);
-
+            Log::info('image: ' . json_encode($image) . ' $url: ' . $url);
             Storage::put($tempFile = 'temp', $image);
 
-            $assetContainer = AssetContainer::findByHandle(config('statamic.api-product-importer.assets_container'));
+            Log::info('class_exists Imagick??? ' . class_exists('\\Imagick') ? 'it does' : 'nope');
 
+//
+            $assetContainer = AssetContainer::findByHandle(config('statamic.api-product-importer.assets_container'));
             $asset = $assetContainer->makeAsset("{$collection}/images/{$originalImageName}");
 
             if ($asset->exists() && config('statamic.api-product-importer.skip_existing_images')) {
@@ -89,9 +92,32 @@ trait ImageImportHelpersTrait
 
             $asset->save();
 
+            Log::info('asset->width() ' . $asset->width());
+            if ($asset->width() > 1000) {
+                // and you are ready to go ...
+                // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
+                $newTempFile = InterventionImage::make($asset->resolvedPath())->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($asset->resolvedPath(), 100); // $asset->extension()
+                Log::info(json_encode($newTempFile));
+            }
+
+            if(class_exists('\\Imagick')) {
+                $output = '';
+                $imagick = new \Imagick($asset->resolvedPath());
+                $bytes = $imagick->getImageBlob();
+                $output .= "Image byte size before stripping: " . strlen($bytes) . "<br/>";
+                $imagick->stripImage();
+                $bytes = $imagick->getImageBlob();
+                $output .= "Image byte size after stripping: " . strlen($bytes) . "<br/>";
+            }
+
+            $asset->save();
+
             return $asset->path();
         } catch (\Exception $e) {
-            logger('Image download failed: ' . $e->getMessage());
+            Log::info('ImageImportHelpersTrait error: ' . $e->getMessage());
+            Log::info('ImageImportHelpersTrait error: ' . $e->getTraceAsString());
             return null;
         }
     }

@@ -120,7 +120,8 @@ __webpack_require__.r(__webpack_exports__);
       mapping: {},
       customMapping: {},
       finished: false,
-      pollChecking: false
+      pollChecking: false,
+      pollInterval: null
     };
   },
   methods: {
@@ -139,6 +140,7 @@ __webpack_require__.r(__webpack_exports__);
       this.customMapping = {};
       this.finished = false;
       this.pollChecking = false;
+      this.pollInterval = null;
     },
     nextStep: function nextStep() {
       this.step++;
@@ -178,7 +180,7 @@ __webpack_require__.r(__webpack_exports__);
     pollFinished: function pollFinished(uuid) {
       var _this2 = this;
 
-      setInterval(function () {
+      this.pollInterval = setInterval(function () {
         _this2.$axios.get(cp_url("weareframework/api-product-importer/api/poll/".concat(uuid))).then(function (response) {
           if (response.data.success == true) {
             _this2.$toast.success('Finished. Reloading page with new data');
@@ -188,9 +190,17 @@ __webpack_require__.r(__webpack_exports__);
             _this2.$toast.warning('Still running');
           }
         })["catch"](function (error) {
+          console.log(error.response);
+
           _this2.$toast.error('Something went wrong');
+
+          _this2.clearIntervalNow();
         });
       }, 5000);
+    },
+    clearIntervalNow: function clearIntervalNow() {
+      clearInterval(this.pollInterval);
+      this.pollChecking = false;
     },
     getLatestData: function getLatestData() {
       var _this3 = this;
@@ -341,7 +351,13 @@ var render = function render() {
     domProps: {
       textContent: _vm._s(_vm.step)
     }
-  })]), _vm._v(" "), _vm.step === 1 ? _c("div", [_c("p", [_vm._v("\n                            1. get latest data from api "), _c("br"), _vm._v("\n                            - get api into local ApiProduct model\n                        ")]), _vm._v(" "), _vm.productDataCollected ? _c("p", [_c("strong", [_vm._v("We have the latest data")])]) : _vm._e(), _vm._v(" "), _c("button", {
+  })]), _vm._v(" "), _vm.step === 1 ? _c("div", [_c("p", [_vm._v("\n                            1. get latest data from api "), _c("br"), _vm._v("\n                            - get api into local ApiProduct model\n                        ")]), _vm._v(" "), _vm.productDataCollected ? _c("div", {
+    staticClass: "border-dotted border-2 border-black p-2 mb-2"
+  }, [_c("h3", {
+    staticClass: "mb-0"
+  }, [_vm._v("We have the latest data, click "), _c("span", {
+    staticClass: "text-blue-300"
+  }, [_vm._v("Next")]), _vm._v(" to continue")])]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn",
     on: {
       click: function click($event) {

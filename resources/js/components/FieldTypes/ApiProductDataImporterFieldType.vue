@@ -31,7 +31,9 @@
                                 - get api into local ApiProduct model
                             </p>
 
-                            <p v-if="productDataCollected"><strong>We have the latest data</strong></p>
+                            <div v-if="productDataCollected" class="border-dotted border-2 border-black p-2 mb-2">
+                                <h3 class="mb-0">We have the latest data, click <span class="text-blue-300">Next</span> to continue</h3>
+                            </div>
 
                             <button class="btn" @click.prevent="getLatestData">
                                 Get Data
@@ -153,7 +155,8 @@ export default {
             mapping: {},
             customMapping: {},
             finished: false,
-            pollChecking: false
+            pollChecking: false,
+            pollInterval: null
         };
     },
 
@@ -173,6 +176,7 @@ export default {
             this.customMapping = {}
             this.finished = false
             this.pollChecking = false
+            this.pollInterval = null
         },
         nextStep() {
             this.step++
@@ -208,7 +212,7 @@ export default {
             })
         },
         pollFinished(uuid) {
-            setInterval(() => {
+            this.pollInterval = setInterval(() => {
                 this.$axios.get(cp_url(`weareframework/api-product-importer/api/poll/${uuid}`))
                     .then(response => {
                         if(response.data.success == true) {
@@ -218,9 +222,15 @@ export default {
                             this.$toast.warning('Still running')
                         }
                     }).catch(error => {
+                        console.log(error.response);
                         this.$toast.error('Something went wrong')
+                        this.clearIntervalNow()
                     })
             }, 5000);
+        },
+        clearIntervalNow() {
+            clearInterval(this.pollInterval)
+            this.pollChecking = false
         },
         getLatestData() {
             this.loading = true

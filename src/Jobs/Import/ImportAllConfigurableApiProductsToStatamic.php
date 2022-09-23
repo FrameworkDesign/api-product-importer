@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Spatie\SimpleExcel\SimpleExcelReader;
 use Statamic\Facades\Collection as CollectionFacade;
 use Statamic\Facades\Entry;
 use Statamic\Facades\File;
