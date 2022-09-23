@@ -189,7 +189,7 @@ __webpack_require__.r(__webpack_exports__);
 
             window.location.reload();
           } else {
-            _this2.$toast.warning('Still running');
+            _this2.$toast.error('Still running');
           }
         })["catch"](function (error) {
           console.log(error);

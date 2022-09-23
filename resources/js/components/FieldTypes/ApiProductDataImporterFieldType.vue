@@ -220,7 +220,7 @@ export default {
                             this.$toast.success('Finished. Reloading page with new data')
                             window.location.reload()
                         } else {
-                            this.$toast.warning('Still running')
+                            this.$toast.error('Still running')
                         }
                     }).catch(error => {
                         console.log(error);
