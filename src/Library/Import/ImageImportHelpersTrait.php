@@ -69,9 +69,6 @@ trait ImageImportHelpersTrait
             Log::info('image: ' . json_encode($image) . ' $url: ' . $url);
             Storage::put($tempFile = 'temp', $image);
 
-            Log::info('class_exists Imagick??? ' . class_exists('\\Imagick') ? 'it does' : 'nope');
-
-//
             $assetContainer = AssetContainer::findByHandle(config('statamic.api-product-importer.assets_container'));
             $asset = $assetContainer->makeAsset("{$collection}/images/{$originalImageName}");
 
@@ -92,17 +89,21 @@ trait ImageImportHelpersTrait
 
             $asset->save();
 
-            Log::info('asset->width() ' . $asset->width());
-            if ($asset->width() > 1000) {
+            Log::info('asset->width() ' . $asset->width() . ' ' . config('statamic.api-product-importer.resize_pixels'));
+            if ($asset->width() > config('statamic.api-product-importer.resize_pixels')) {
+                $extensionSave = config('statamic.api-product-importer.extension_save');
+                $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
+
                 // and you are ready to go ...
                 // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
                 $newTempFile = InterventionImage::make($asset->resolvedPath())->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
                     $constraint->aspectRatio();
-                })->save($asset->resolvedPath(), 100); // $asset->extension()
+                })->save($asset->resolvedPath(), $imageQualitySave, ($extensionSave === 'none') ? $asset->extension() : $extensionSave);
+                $asset->extension('jpg');
                 Log::info(json_encode($newTempFile));
             }
 
-            if(class_exists('\\Imagick')) {
+            if(class_exists('Imagick')) {
                 $output = '';
                 $imagick = new \Imagick($asset->resolvedPath());
                 $bytes = $imagick->getImageBlob();
@@ -110,6 +111,8 @@ trait ImageImportHelpersTrait
                 $imagick->stripImage();
                 $bytes = $imagick->getImageBlob();
                 $output .= "Image byte size after stripping: " . strlen($bytes) . "<br/>";
+
+                Log::info('$output: ' . $output);
             }
 
             $asset->save();

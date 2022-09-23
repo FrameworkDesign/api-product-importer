@@ -17,6 +17,8 @@ return [
      */
     'assets_container' => 'assets',
     'resize_pixels' => env('API_IMPORTER_RESIZE_PIXELS', 1000),
+    'image_quality_save' => env('API_IMPORTER_EXTENSION_QAULITY_SAVE', 50),
+    'extension_save' => env('API_IMPORTER_EXTENSION_SAVE_AS', 'none'),
 
     /*
      * Enable downloading of featured image. The default is 'true'.
