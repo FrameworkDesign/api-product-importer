@@ -203,7 +203,7 @@ export default {
                 this.pollChecking = true
             })
             .catch((error) => {
-                console.log(error.response);
+                console.log(error);
                 this.$toast.error('Something went wrong')
             })
             .finally(() => {
@@ -223,7 +223,7 @@ export default {
                             this.$toast.warning('Still running')
                         }
                     }).catch(error => {
-                        console.log(error.response);
+                        console.log(error);
                         this.$toast.error('Something has gone wrong. Please try again')
                         this.clearIntervalNow()
                     })
