@@ -41,6 +41,11 @@ class CollectSettings
         $this->fields = $fields->preProcess();
     }
 
+    public function updateValues($values)
+    {
+        $this->file->write($values);
+    }
+
     private function setLocale()
     {
         $this->file->setLocale(

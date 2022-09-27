@@ -73,8 +73,6 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
 
     public function handle()
     {
-        Log::info('--- NEW PRODUCT ---');
-        Log::info('ImportConfigurableApiProductToStatamic->handle ' . $this->index);
         try {
             $blueprint = 'products_with_variants';
             $variants = [
@@ -83,14 +81,10 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
             ];
             $row = $this->apiProduct;
 
-//            Log::info('$this->apiProduct ' . json_encode($this->apiProduct));
-
             $this->mappedData = $this->mapping->map(function (string $rowKey) use ($row) {
                 $value = $row[$rowKey] ?? null;
                 return $value;
             });
-
-//            Log::info('$this->mappedData ' . json_encode($this->mappedData));
 
             if (
                 method_exists($this, 'importImages')
@@ -106,13 +100,8 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
             $uniqueVariantNames = array_intersect($variants, $this->customMapping->all());
             $uniqueVariantNamesOutput = [];
 
-//            Log::info('product count: ' . $this->apiProduct->children->count());
-//            Log::info('$uniqueVariantNames ' . json_encode($uniqueVariantNames));
-//            Log::info('customMapping ' . json_encode($this->customMapping->all()));
-
             if ($this->apiProduct->children->count() > 0) {
                 foreach($this->apiProduct->children as $apiProductChild) {
-//                    Log::info('$apiProductChild ' . json_encode($apiProductChild));
                     $customMapped = $this->customMapping->map(function(string $rowKey) use($apiProductChild) {
                         $value = $apiProductChild[$rowKey] ?? null;
                         return $value;
@@ -148,15 +137,10 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                     'options' => $productVariantOptions
                 ];
 
-//                Log::info('$uniqueVariantNamesOutput ' . json_encode($uniqueVariantNamesOutput));
-//                Log::info('$finalUniqueVariantNames ' . json_encode($finalUniqueVariantNames));
-
             }
 
-
-//            Log::info('$this->mappedData ' . json_encode($this->mappedData->toArray()));
-
             $slug = $this->mappedData->get('slug');
+            $sku = $this->mappedData->get('sku');
             $title = $this->mappedData->get('title');
             if (! $title) {
                 $message = "[Row {$this->index}]: This row has no title.";
@@ -177,6 +161,7 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
             if ($productExists->count() === 0) {
                 $entry = Entry::make()
                     ->slug(Str::slug($title))
+                    ->where('sku', $sku)
                     ->locale($this->site)
                     ->collection($this->collection)
                     ->blueprint($blueprint)
@@ -206,8 +191,6 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                 }
             }
 
-//            Log::info($type . ' - site: ' . $this->site . ' - collection:' . $this->collection . ' - title: ' . $title);
-
             cache()->increment("{$this->uuid}-api-product-statamic-import-processed");
             cache()->put("{$this->uuid}-api-product-statamic-import-errors", $this->errors);
             cache()->put("{$this->uuid}-api-product-statamic-import-failed", $this->failedRows);
@@ -216,7 +199,6 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                 cache()->put("{$this->uuid}-api-product-statamic-import-finished", true);
             }
 
-//            Log::info('ImportConfigurableApiProductToStatamic->handle FINISH ' . $this->index);
             return;
         } catch(\Exception $exception) {
             Log::info('ImportConfigurableApiProductToStatamic error ' . $exception->getMessage() . ' ' . $exception->getTraceAsString());

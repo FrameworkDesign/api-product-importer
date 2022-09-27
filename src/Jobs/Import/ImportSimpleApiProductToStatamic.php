@@ -151,10 +151,12 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
 
             }
 
+            Log::info('$this->apiProduct->children->count() ' . $this->apiProduct->children->count());
+            Log::info('$this->mappedData ' . json_encode($this->mappedData));
 
-            Log::info('$this->mappedData ' . json_encode($this->mappedData->toArray()));
 
             $slug = $this->mappedData->get('slug');
+            $sku = $this->mappedData->get('sku');
             $title = $this->mappedData->get('title');
             if (! $title) {
                 $message = "[Row {$this->index}]: This row has no title.";
@@ -175,6 +177,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
             if ($productExists->count() === 0) {
                 $entry = Entry::make()
                     ->slug(Str::slug($title))
+                    ->where('sku', $sku)
                     ->locale($this->site)
                     ->collection($this->collection)
                     ->blueprint($blueprint)

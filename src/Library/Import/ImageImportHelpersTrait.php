@@ -90,20 +90,18 @@ trait ImageImportHelpersTrait
             $asset->save();
 
             Log::info('asset->width() ' . $asset->width() . ' ' . config('statamic.api-product-importer.resize_pixels'));
+            $extensionSave = config('statamic.api-product-importer.extension_save');
+            $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
             if ($asset->width() > config('statamic.api-product-importer.resize_pixels')) {
-                $extensionSave = config('statamic.api-product-importer.extension_save');
-                $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
-
-                // and you are ready to go ...
                 // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
                 $newTempFile = InterventionImage::make($asset->resolvedPath())->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
                     $constraint->aspectRatio();
                 })->save($asset->resolvedPath(), $imageQualitySave, ($extensionSave === 'none') ? $asset->extension() : $extensionSave);
-                $asset->extension('jpg');
-                Log::info(json_encode($newTempFile));
+            } else {
+                $newTempFile = InterventionImage::make($asset->resolvedPath())->save($asset->resolvedPath(), $imageQualitySave, ($extensionSave === 'none') ? $asset->extension() : $extensionSave);
             }
 
-            if(class_exists('Imagick')) {
+            if (class_exists('Imagick')) {
                 $output = '';
                 $imagick = new \Imagick($asset->resolvedPath());
                 $bytes = $imagick->getImageBlob();
