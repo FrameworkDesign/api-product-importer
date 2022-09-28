@@ -66,7 +66,6 @@ trait ImageImportHelpersTrait
             $image = Http::retry(3, 500)->get($url)->body();
 
             $originalImageName = basename($url);
-            Log::info('image: ' . json_encode($image) . ' $url: ' . $url);
             Storage::put($tempFile = 'temp', $image);
 
             $assetContainer = AssetContainer::findByHandle(config('statamic.api-product-importer.assets_container'));
@@ -89,7 +88,7 @@ trait ImageImportHelpersTrait
 
             $asset->save();
 
-            Log::info('asset->width() ' . $asset->width() . ' ' . config('statamic.api-product-importer.resize_pixels'));
+
             $extensionSave = config('statamic.api-product-importer.extension_save');
             $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
             if ($asset->width() > config('statamic.api-product-importer.resize_pixels')) {
@@ -109,8 +108,6 @@ trait ImageImportHelpersTrait
                 $imagick->stripImage();
                 $bytes = $imagick->getImageBlob();
                 $output .= "Image byte size after stripping: " . strlen($bytes) . "<br/>";
-
-                Log::info('$output: ' . $output);
             }
 
             $asset->save();

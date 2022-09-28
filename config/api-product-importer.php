@@ -15,7 +15,7 @@ return [
     /**
      * The name of the assets container where images should be downloaded.
      */
-    'assets_container' => 'assets',
+    'assets_container' => env('API_PRODUCT_IMPORTER_ASSETS_CONTAINER', 'assets'),
     'resize_pixels' => env('API_IMPORTER_RESIZE_PIXELS', 1000),
     'image_quality_save' => env('API_IMPORTER_EXTENSION_QAULITY_SAVE', 50),
     'extension_save' => env('API_IMPORTER_EXTENSION_SAVE_AS', 'none'),
