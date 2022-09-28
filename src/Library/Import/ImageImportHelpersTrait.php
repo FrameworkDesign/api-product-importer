@@ -66,7 +66,7 @@ trait ImageImportHelpersTrait
             $image = Http::retry(3, 500)->get($url)->body();
 
             $originalImageName = basename($url);
-            Storage::put($tempFile = 'temp', $image);
+            Storage::disk(config('statamic.api-product-importer.disk'))->put($tempFile = 'temp', $image);
 
             $assetContainer = AssetContainer::findByHandle(config('statamic.api-product-importer.assets_container'));
             $asset = $assetContainer->makeAsset("{$collection}/images/{$originalImageName}");
@@ -81,7 +81,7 @@ trait ImageImportHelpersTrait
 
             $asset->upload(
                 new UploadedFile(
-                    Storage::path($tempFile),
+                    Storage::disk(config('statamic.api-product-importer.disk'))->path($tempFile),
                     $originalImageName,
                 )
             );
