@@ -70,7 +70,12 @@ trait ImageImportHelpersTrait
             $disk = config('statamic.api-product-importer.disk');
             $originalImageName = basename($url);
             $assetPath = "{$collection}/images/{$originalImageName}";
-            Storage::put($tempFile = 'temp', $image);
+            $tempFile = 'temp';
+            $success = $this->compressImage($url, 'test');
+
+            if (!$success) {
+                Storage::put($tempFile, $image);
+            }
 
             $defaultContainer = config('statamic.api-product-importer.assets_container');
             $fieldContainer = (isset($match['container'])) ? $match['container'] : $defaultContainer;
@@ -95,44 +100,39 @@ trait ImageImportHelpersTrait
 
             $asset->save();
 
-            try {
-                $extensionSave = config('statamic.api-product-importer.extension_save');
-                $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
-                if ($asset->width() > config('statamic.api-product-importer.resize_pixels')) {
-                    // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
-                    $newTempFile = InterventionImage::make($asset->resolvedPath())->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->save($asset->resolvedPath(), $imageQualitySave, ($extensionSave === 'none') ? $asset->extension() : $extensionSave);
-                } else {
-                    $newTempFile = InterventionImage::make($asset->resolvedPath())->save($asset->resolvedPath(), $imageQualitySave, ($extensionSave === 'none') ? $asset->extension() : $extensionSave);
-                }
-            } catch (\Exception $e) {
-                Log::info('InterventionImage conversion failed error: ' . $e->getMessage());
-//                Log::info('InterventionImage conversion failed error: ' . $e->getTraceAsString());
-            }
-
-            if (class_exists('Imagick')) {
-                try {
-                    $output = '';
-                    $imagick = new \Imagick($asset->resolvedPath());
-                    $bytes = $imagick->getImageBlob();
-                    $output .= "Image byte size before stripping: " . strlen($bytes) . "<br/>";
-                    $imagick->stripImage();
-                    $bytes = $imagick->getImageBlob();
-                    $output .= "Image byte size after stripping: " . strlen($bytes) . "<br/>";
-                } catch (\Exception $e) {
-                    Log::info('Imagick conversion failed error: ' . $e->getMessage());
-//                    Log::info('Imagick conversion failed error: ' . $e->getTraceAsString());
-                }
-            }
-
-            $asset->save();
-
             return $asset->path();
         } catch (\Exception $e) {
             Log::info('ImageImportHelpersTrait error: ' . $e->getMessage());
 //            Log::info('ImageImportHelpersTrait error: ' . $e->getTraceAsString());
             return null;
         }
+    }
+
+    protected function compressImage($url)
+    {
+        $success = false;
+        try {
+            $extensionSave = config('statamic.api-product-importer.extension_save');
+            $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
+
+            // $asset->width()
+            $newTempFile = InterventionImage::make($url);
+
+            if ($newTempFile->width() > config('statamic.api-product-importer.resize_pixels')) {
+                // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
+                $newTempFile->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+            }
+
+            $newTempFile->save('temp', $imageQualitySave, $extensionSave);
+
+            Storage::put($tempFile = 'temp', $newTempFile);
+            $success = true;
+        } catch (\Exception $e) {
+            Log::info('InterventionImage conversion failed error: ' . $e->getMessage());
+        }
+
+        return $success;
     }
 }
