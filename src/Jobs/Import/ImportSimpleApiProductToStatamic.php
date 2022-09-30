@@ -97,7 +97,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 method_exists($this, 'importImages')
                 && config('statamic.api-product-importer.download_images')
             ) {
-                $this->importImages($this->mappedData);
+                $this->mappedData = $this->importImages($this->mappedData);
             }
 
             // set it off empty
@@ -118,7 +118,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                         method_exists($this, 'importImages')
                         && config('statamic.api-product-importer.download_images')
                     ) {
-                        $this->importImages($customMapped);
+                        $customMapped = $this->importImages($customMapped);
                     }
 
                     $customMappedArray = $customMapped->all();

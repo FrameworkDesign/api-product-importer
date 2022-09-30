@@ -14,17 +14,16 @@ use Intervention\Image\ImageManagerStatic as InterventionImage;
 trait ImageImportHelpersTrait
 {
 
-    private function importImages($mappedData): void
+    private function importImages($mappedData)
     {
         if (!property_exists($this, 'blueprint') || !property_exists($this, 'mappedData')) {
-            return;
+            return $mappedData;
         }
 
         $fields = $this->blueprint->fields()->resolveFields()->toArray();
-        $this->mappedData = $mappedData->map(function ($item, $handle) use($fields) {
+        return $mappedData->map(function ($item, $handle) use($fields) {
             return $this->checkForAssetFields($item, $handle, $fields);
         });
-
     }
 
     private function checkForAssetFields($item, $handle, $fields) {
@@ -57,10 +56,10 @@ trait ImageImportHelpersTrait
     private function importImage($match, $item, $handle)
     {
         $assetUrl = $item;
-        return $this->downloadAsset($assetUrl ?? '', $this->collection);
+        return $this->downloadAsset($match, $assetUrl ?? '', $this->collection);
     }
 
-    private function downloadAsset(string $url = null, string $collection)
+    private function downloadAsset($match, string $url = null, string $collection)
     {
         if (! $url) {
             return false;
@@ -109,7 +108,7 @@ trait ImageImportHelpersTrait
                 }
             } catch (\Exception $e) {
                 Log::info('InterventionImage conversion failed error: ' . $e->getMessage());
-                Log::info('InterventionImage conversion failed error: ' . $e->getTraceAsString());
+//                Log::info('InterventionImage conversion failed error: ' . $e->getTraceAsString());
             }
 
             if (class_exists('Imagick')) {
@@ -123,7 +122,7 @@ trait ImageImportHelpersTrait
                     $output .= "Image byte size after stripping: " . strlen($bytes) . "<br/>";
                 } catch (\Exception $e) {
                     Log::info('Imagick conversion failed error: ' . $e->getMessage());
-                    Log::info('Imagick conversion failed error: ' . $e->getTraceAsString());
+//                    Log::info('Imagick conversion failed error: ' . $e->getTraceAsString());
                 }
             }
 
@@ -132,7 +131,7 @@ trait ImageImportHelpersTrait
             return $asset->path();
         } catch (\Exception $e) {
             Log::info('ImageImportHelpersTrait error: ' . $e->getMessage());
-            Log::info('ImageImportHelpersTrait error: ' . $e->getTraceAsString());
+//            Log::info('ImageImportHelpersTrait error: ' . $e->getTraceAsString());
             return null;
         }
     }
