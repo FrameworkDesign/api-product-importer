@@ -43,6 +43,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
     private $customMapping;
 
     private $blueprint;
+    private $blueprintFields;
 
     private $index;
     private $isLast;
@@ -74,12 +75,11 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
         $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;
         /** @var \Statamic\Fields\Blueprint $blueprint */
         $this->blueprint = $this->collection->entryBlueprint($blueprintHandle);
+        $this->blueprintFields = $this->blueprint->fields()->resolveFields()->toArray();
     }
 
     public function handle()
     {
-        Log::info('--- NEW PRODUCT ---');
-        Log::info('ImportSimpleApiProductToStatamic->handle ' . $this->index);
         try {
             $blueprint = 'products';
             $variants = [
@@ -87,8 +87,6 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 'size'
             ];
             $row = $this->apiProduct;
-
-            Log::info('$this->apiProduct ' . json_encode($this->apiProduct));
 
             $this->mappedData = $this->mapping->map(function (string $rowKey) use ($row) {
                 $value = $row[$rowKey] ?? null;
@@ -99,7 +97,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 method_exists($this, 'importImages')
                 && config('statamic.api-product-importer.download_images')
             ) {
-                $this->importImages();
+                $this->importImages($this->mappedData);
             }
 
             // set it off empty
@@ -116,6 +114,13 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                         return $value;
                     });
 
+                    if (
+                        method_exists($this, 'importImages')
+                        && config('statamic.api-product-importer.download_images')
+                    ) {
+                        $this->importImages($customMapped);
+                    }
+
                     $customMappedArray = $customMapped->all();
                     $customMappedArray['price'] = $apiProductChild['price'];
                     $customMappedArray['key'] = $apiProductChild['sku'];
@@ -127,6 +132,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                         if(! isset($customMappedArray[$variant])) {
                             continue;
                         }
+
                         $uniqueVariantNamesOutput[$variant][$customMappedArray[$variant]] = $customMappedArray[$variant];
                         if (isset($customMappedArray[$variant])) {
                             $valsForVariantName[] = $customMappedArray[$variant];
@@ -135,6 +141,9 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
 
                     $customMappedArray['variant'] = implode(', ', $valsForVariantName);
                 }
+
+                Log::info('$uniqueVariantNamesOutput ' . json_encode($uniqueVariantNamesOutput));
+                Log::info('$customMappedArray ' . json_encode($customMappedArray));
 
                 $finalUniqueVariantNames = [];
                 foreach($uniqueVariantNamesOutput as $key => $uniqueVariantNamesOutputRow) {
@@ -149,9 +158,11 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                     'options' => $productVariantOptions
                 ];
 
+                Log::info('$finalUniqueVariantNames ' . json_encode($finalUniqueVariantNames));
+                Log::info('$productVariantOptions ' . json_encode($productVariantOptions));
             }
 
-            Log::info('$this->apiProduct->children->count() ' . $this->apiProduct->children->count());
+
             Log::info('$this->mappedData ' . json_encode($this->mappedData));
 
 

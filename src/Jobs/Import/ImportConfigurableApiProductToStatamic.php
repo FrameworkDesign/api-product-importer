@@ -34,6 +34,7 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
     private $collection;
 
     private $blueprint;
+    private $blueprintFields;
 
     /** @var \Illuminate\Support\Collection */
     private $customMapping;
@@ -68,6 +69,7 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
 
         /** @var \Statamic\Fields\Blueprint $blueprint */
         $this->blueprint = $this->collection->entryBlueprint($collection);
+        $this->blueprintFields = $this->blueprint->fields()->resolveFields()->toArray();
 
     }
 
@@ -90,7 +92,7 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                 method_exists($this, 'importImages')
                 && config('statamic.api-product-importer.download_images')
             ) {
-                $this->importImages();
+                $this->importImages($this->mappedData);
             }
 
             // set it off empty
@@ -106,6 +108,13 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                         $value = $apiProductChild[$rowKey] ?? null;
                         return $value;
                     });
+
+                    if (
+                        method_exists($this, 'importImages')
+                        && config('statamic.api-product-importer.download_images')
+                    ) {
+                        $this->importImages($customMapped);
+                    }
 
                     $customMappedArray = $customMapped->all();
                     $customMappedArray['price'] = $apiProductChild['price'];

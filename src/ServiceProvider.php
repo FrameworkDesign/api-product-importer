@@ -42,6 +42,11 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
+        Queue::after(function (JobProcessed $event) {
+            // if memory_get_usage = 12256 then (12256 / 1000) = 12.256, i.e. ~12 bytes per job
+            echo '[Memory] After running job  => '.memory_get_usage()."\n";
+        });
+
         $this->commands([
             PullProductsFromApi::class,
         ]);
