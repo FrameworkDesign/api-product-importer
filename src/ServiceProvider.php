@@ -30,7 +30,6 @@ class ServiceProvider extends AddonServiceProvider
         ApiProductDataImporter::class
     ];
 
-
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/api-product-importer.php', 'statamic.api-product-importer');
