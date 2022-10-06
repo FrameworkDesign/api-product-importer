@@ -75,6 +75,11 @@ class ApiProduct extends Model
         'size_uk',
         'size_fr',
         'size_intl',
+
+        'size_all_uk',
+        'size_all_fr',
+        'size_all_intl',
+
         'product_lengths',
 
         'shoe_men_size_uk',
@@ -139,6 +144,9 @@ class ApiProduct extends Model
         'use_config_backorders' => 'boolean',
         'configurable_on' => 'json',
         'variant_colors' => 'array',
+        'size_all_uk' => 'array',
+        'size_all_fr' => 'array',
+        'size_all_intl' => 'array',
         'product_material' => 'array',
         'product_lining' => 'array',
         'product_panels' => 'array',

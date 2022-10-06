@@ -81,6 +81,11 @@ class CreateApiProductsTable extends Migration
             $table->string('size_uk')->nullable();
             $table->string('size_fr')->nullable();
             $table->string('size_intl')->nullable();
+
+            $table->text('size_all_uk')->nullable();
+            $table->text('size_all_fr')->nullable();
+            $table->text('size_all_intl')->nullable();
+
             $table->string('product_lengths')->nullable();
 
             $table->string('shoe_men_size_uk')->nullable();
