@@ -46,6 +46,7 @@
                                 <map-collection-fields-panel
                                     name="mapping"
                                     id="mapping"
+                                    :savedMapping="savedMapping"
                                     :config="fieldMappingConfig"
                                     @mapping="updateMapping"
                                     @custommapping="updateCustomMapping"
@@ -147,6 +148,7 @@ export default {
         return {
             modalOpen: false,
             step: 1,
+            savedMapping: {},
             loading: false,
             currentProductValues: {},
             product: {},
@@ -168,6 +170,7 @@ export default {
             this.modalOpen = false
             this.step = 1
             this.loading = false
+            this.savedMapping = {}
             this.currentProductValues = {}
             this.product = {}
             this.productDataCollected = false
@@ -241,6 +244,7 @@ export default {
                     this.product = response.data.product
                     this.productDataCollected = true
                     this.fieldMappingConfig = response.data.mapping
+                    this.savedMapping = response.data.savedMapping
                 }
             })
             .finally(() => {

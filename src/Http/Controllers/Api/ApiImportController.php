@@ -42,6 +42,7 @@ class ApiImportController extends CpController
     public function pull($sku, Request $request, File $file)
     {
         try {
+            $savedMapping = cache()->get('api-product-statamic-saved-data-mapping');
             $settings = (new CollectSettings($file))->handle();
             $url = $settings->values['api_product_importer_products_single_route'];
             $url = str_replace('{sku}', $sku, $url);
@@ -81,7 +82,8 @@ class ApiImportController extends CpController
                 'product' => $apiProduct,
                 'mapping' => [
                     'keys' => $keys,
-                    'fields' => $fields
+                    'fields' => $fields,
+                    'savedMapping' => $savedMapping
                 ]
             ]);
         } catch (\Exception $exception) {

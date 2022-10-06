@@ -112,6 +112,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       modalOpen: false,
       step: 1,
+      savedMapping: {},
       loading: false,
       currentProductValues: {},
       product: {},
@@ -132,6 +133,7 @@ __webpack_require__.r(__webpack_exports__);
       this.modalOpen = false;
       this.step = 1;
       this.loading = false;
+      this.savedMapping = {};
       this.currentProductValues = {};
       this.product = {};
       this.productDataCollected = false;
@@ -213,6 +215,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.product = response.data.product;
           _this3.productDataCollected = true;
           _this3.fieldMappingConfig = response.data.mapping;
+          _this3.savedMapping = response.data.savedMapping;
         }
       })["finally"](function () {
         setTimeout(function () {
@@ -236,7 +239,20 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mixins: [Fieldtype],
-  props: ['config'],
+  props: {
+    config: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    },
+    savedMapping: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    }
+  },
   data: function data() {
     return {
       mapping: {},
@@ -246,6 +262,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    this.mapping = this.savedMapping;
     this.config.keys.forEach(function (key) {
       var field = _this.config.fields.filter(function (field) {
         return field.handle === key;
@@ -376,6 +393,7 @@ var render = function render() {
     attrs: {
       name: "mapping",
       id: "mapping",
+      savedMapping: _vm.savedMapping,
       config: _vm.fieldMappingConfig
     },
     on: {
@@ -1540,7 +1558,7 @@ Statamic.$components.register("map-collection-fields-panel", _components_Mapping
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/framework000/CodeValet/statamic-fwk/addons/weareframework/api-product-importer/resources/js/cp.js */"./resources/js/cp.js");
+module.exports = __webpack_require__(/*! /Users/framework000/CodeValet/fwk-statamic-test/addons/weareframework/api-product-importer/resources/js/cp.js */"./resources/js/cp.js");
 
 
 /***/ })

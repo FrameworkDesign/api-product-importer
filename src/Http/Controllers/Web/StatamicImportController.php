@@ -56,6 +56,7 @@ class StatamicImportController extends CpController
     public function fieldMapping(Request $request)
     {
         try {
+            $savedMapping = cache()->get('api-product-statamic-saved-data-mapping');
             $handle = $request->get('collection');
             $type = 'configurable';//($handle === 'products_with_variants') ? 'configurable' : 'simple';
             $collection = Collection::findByHandle('products'); // $handle
@@ -77,6 +78,7 @@ class StatamicImportController extends CpController
                 'type' => $type,
                 'keys' => $keys,
                 'fields' => $fields,
+                'savedMapping' => $savedMapping
             ]);
         } catch(\Exception $exception) {
             session()->flash('error', $exception->getMessage());
@@ -95,6 +97,8 @@ class StatamicImportController extends CpController
             $site = session()->get('api-product-statamic-data-import-site', Site::default()->handle());
             $uuid = Str::uuid()->toString();
             $request->session()->put('api-product-statamic-data-import-uuid', $uuid);
+
+            cache()->put('api-product-statamic-saved-data-mapping', $mapping);
 
             $collectionModel = Collection::findByHandle('products');
             $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;

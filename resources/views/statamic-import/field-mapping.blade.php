@@ -26,6 +26,7 @@
                 class="-mx-2"
                 name="mapping"
                 id="mapping"
+                :savedMapping="{{ json_encode($savedMapping) }}"
                 :config="{
                     keys: {{ json_encode($keys) }},
                     fields: {{ json_encode($fields) }},

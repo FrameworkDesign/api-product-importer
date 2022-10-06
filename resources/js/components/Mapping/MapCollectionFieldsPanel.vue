@@ -35,7 +35,16 @@
 export default {
     mixins: [Fieldtype],
 
-    props: ['config'],
+    props: {
+        config: {
+            type: Object,
+            default: () => ({})
+        },
+        savedMapping: {
+            type: Object,
+            default: () => ({})
+        }
+    },
 
     data: function () {
         return {
@@ -45,6 +54,9 @@ export default {
     },
 
     mounted() {
+
+        this.mapping = this.savedMapping
+
         this.config.keys.forEach(key => {
             const field = this.config.fields.filter(field => field.handle === key)[0]
 
