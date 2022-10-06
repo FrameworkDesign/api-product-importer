@@ -80,6 +80,18 @@ class ApiProduct extends Model
         'size_all_fr',
         'size_all_intl',
 
+        'size_all_clothing_uk',
+        'size_all_clothing_fr',
+        'size_all_clothing_intl',
+
+        'size_all_glove_uk',
+        'size_all_glove_fr',
+        'size_all_glove_intl',
+
+        'size_all_shoe_uk',
+        'size_all_shoe_fr',
+        'size_all_shoe_intl',
+
         'product_lengths',
 
         'shoe_men_size_uk',
@@ -147,6 +159,15 @@ class ApiProduct extends Model
         'size_all_uk' => 'array',
         'size_all_fr' => 'array',
         'size_all_intl' => 'array',
+        'size_all_clothing_uk' => 'array',
+        'size_all_clothing_fr' => 'array',
+        'size_all_clothing_intl' => 'array',
+        'size_all_glove_uk' => 'array',
+        'size_all_glove_fr' => 'array',
+        'size_all_glove_intl' => 'array',
+        'size_all_shoe_uk' => 'array',
+        'size_all_shoe_fr' => 'array',
+        'size_all_shoe_intl' => 'array',
         'product_material' => 'array',
         'product_lining' => 'array',
         'product_panels' => 'array',
