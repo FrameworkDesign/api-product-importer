@@ -70,8 +70,8 @@ trait ImageImportHelpersTrait
             $disk = config('statamic.api-product-importer.disk');
             $originalImageName = basename($url);
             $assetPath = "{$collection}/images/{$originalImageName}";
-            $tempFile = 'temp';
-            $success = $this->compressImage($url, 'test');
+            $tempFile = Str::random();
+            $success = $this->compressImage($url, $tempFile);
 
             if (!$success) {
                 Storage::put($tempFile, $image);
@@ -103,12 +103,11 @@ trait ImageImportHelpersTrait
             return $asset->path();
         } catch (\Exception $e) {
             Log::info('ImageImportHelpersTrait error: ' . $e->getMessage());
-//            Log::info('ImageImportHelpersTrait error: ' . $e->getTraceAsString());
             return null;
         }
     }
 
-    protected function compressImage($url)
+    protected function compressImage($url, $tempFile)
     {
         $success = false;
         try {
@@ -127,7 +126,7 @@ trait ImageImportHelpersTrait
 
             $newTempFile->save('temp', $imageQualitySave, $extensionSave);
 
-            Storage::put($tempFile = 'temp', $newTempFile);
+            Storage::put($tempFile, $newTempFile);
             $success = true;
         } catch (\Exception $e) {
             Log::info('InterventionImage conversion failed error: ' . $e->getMessage());

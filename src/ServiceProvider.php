@@ -43,7 +43,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         Queue::after(function (JobProcessed $event) {
             // if memory_get_usage = 12256 then (12256 / 1000) = 12.256, i.e. ~12 bytes per job
-            echo '[Memory] After running job  => '.memory_get_usage()."\n";
+            Log::info('[Memory] After running job  => '.memory_get_usage());
         });
 
         $this->commands([
