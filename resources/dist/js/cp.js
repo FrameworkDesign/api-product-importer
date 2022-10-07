@@ -375,7 +375,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.product = response.data.product;
           _this3.productDataCollected = true;
           _this3.fieldMappingConfig = response.data.mapping;
-          _this3.savedMapping = response.data.savedMapping;
+          _this3.savedMapping = response.data.savedMapping != null ? response.data.savedMapping : {};
         }
       })["finally"](function () {
         setTimeout(function () {

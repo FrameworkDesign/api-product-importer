@@ -287,7 +287,7 @@ export default {
                     this.product = response.data.product
                     this.productDataCollected = true
                     this.fieldMappingConfig = response.data.mapping
-                    this.savedMapping = response.data.savedMapping
+                    this.savedMapping = (response.data.savedMapping != null) ? response.data.savedMapping : {}
                 }
             })
                 .finally(() => {
