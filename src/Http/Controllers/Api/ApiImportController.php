@@ -42,6 +42,7 @@ class ApiImportController extends CpController
     public function pull($sku, Request $request, File $file)
     {
         try {
+            $collectionName = $request->input('collection') ?? 'products';
             $savedMapping = cache()->get('api-product-statamic-saved-data-mapping');
             $settings = (new CollectSettings($file))->handle();
             $url = $settings->values['api_product_importer_products_single_route'];
@@ -55,10 +56,20 @@ class ApiImportController extends CpController
             if ($response->successful()) {
                 // import the punks
                 $importData = $response->json();
-                if(isset($importData['product'])) {
+
+                if (isset($importData['product'])) {
                     $apiProduct = $importData['product'];
                     ImportApiProductAction::perform($importData['product']);
                 }
+
+                if (isset($importData['variants'])) {
+                    $apiProducts = $importData['variants'];
+                    foreach($apiProducts as $product) {
+                        ImportApiProductAction::perform($product);
+                    }
+                }
+            } else {
+                throw new \Exception('It could not find the product');
             }
 
             if ($response->failed()) {
@@ -69,10 +80,16 @@ class ApiImportController extends CpController
                 throw new \Exception('It did not pull');
             });
 
-            $collection = Collection::findByHandle('products'); // $handle
+            $collection = Collection::findByHandle($collectionName); // $handle
             $blueprintHandle = 'products';
             /** @var \Statamic\Fields\Blueprint $blueprint */
             $blueprint = $collection->entryBlueprint($blueprintHandle);
+
+            if (is_null($blueprint)) {
+                $blueprintHandle = 'product';
+                /** @var \Statamic\Fields\Blueprint $blueprint */
+                $blueprint = $collection->entryBlueprint($blueprintHandle);
+            }
             $keys = (new ApiProduct())->getFillableWithout();
             $fields = $blueprint->fields()->resolveFields()->toArray();
 

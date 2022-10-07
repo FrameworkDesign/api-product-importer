@@ -9,7 +9,7 @@
     @if(isset($settings->values['api_product_importer_products_all_route']) && !is_null($settings->values['api_product_importer_products_all_route']) && !empty($settings->values['api_product_importer_products_all_route']))
         <div class="mb-5">
             <div>
-                <h3 class="font-bold">1. API</h3>
+                <h2 class="font-bold">1. API</h2>
                 <p>We pull products from the RST Product portal</p>
                 <a href="{{ cp_route('weareframework.api-product-importer.pull-data.index') }}" class="btn-primary">
                     Pull API Products
@@ -21,19 +21,24 @@
                 <br>
                 <p class="mt-.5">You have <strong>{{ $apiParentProducts->count() }}</strong> API products imported so far</p>
                 <p class="mt-.5"><strong>{{ $allApiProducts->count() }}</strong> API products and children/variants imported so far</p>
+
+                <a href="{{ cp_route('weareframework.api-product-importer.api-pulled-products.index') }}" class="btn mt-1">
+                    View imported API Products
+                </a>
+
             </div>
 
             @if($apiParentProducts->count() > 0)
-                <div class="mt-2">
-                    <h3 class="font-bold">2. Import to Statamic</h3>
+                <div class="mt-4">
+                    <h2 class="font-bold">2. Import to Statamic</h2>
                     <p>Import API products into</p>
                     <a href="{{ cp_route('weareframework.api-product-importer.statamic.site-target') }}" class="btn-primary">Import to Statamic</a>
                 </div>
             @endif
 
             @if($apiParentProducts->count() > 0)
-                <div class="mt-2">
-                    <h3 class="font-bold">3. Check Imported to Statamic</h3>
+                <div class="mt-4">
+                    <h2 class="font-bold">3. Check Imported to Statamic</h2>
                     <p>Imported API products status and info</p>
                     <a href="{{ cp_route('weareframework.api-product-importer.statamic.finished') }}" class="btn-primary">Imported</a>
                 </div>

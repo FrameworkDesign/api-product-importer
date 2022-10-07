@@ -5,6 +5,13 @@ namespace Weareframework\ApiProductImporter\Library\Errors;
 class GeneralError
 {
 
+    public static function redirect(\Exception $exception)
+    {
+        session()->flash('message', 'Product '.$exception->getMessage());
+
+        return redirect()->back();
+    }
+
     public static function api(\Exception $exception, $code = 404)
     {
         return response()->json([

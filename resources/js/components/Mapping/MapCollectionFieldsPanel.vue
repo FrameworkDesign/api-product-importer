@@ -55,7 +55,7 @@ export default {
 
     mounted() {
 
-        this.mapping = this.savedMapping
+        this.$set(this, 'mapping', this.savedMapping)
 
         this.config.keys.forEach(key => {
             const field = this.config.fields.filter(field => field.handle === key)[0]
@@ -66,7 +66,7 @@ export default {
             }
 
             const variantBluePrint = this.config.fields.filter(field => field.type === 'product_variants')[0]
-            if(variantBluePrint) {
+            if (variantBluePrint) {
                 const variantField = variantBluePrint.option_fields.filter(field => field.handle === key)[0]
                 if(variantField) {
                     this.$set(this.customMapping, variantField.handle, key)

@@ -186,13 +186,16 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
             $entry = null;
 
             if ($productExists->count() === 0) {
+                $saveData = $this->mappedData->all();
+                if(isset($saveData['slug'])) {
+                    $saveData['slug'] = Str::slug($slug);
+                }
+
                 $entry = Entry::make()
-                    ->slug(Str::slug($title))
-                    ->where('sku', $sku)
                     ->locale($this->site)
                     ->collection($this->collection)
                     ->blueprint($blueprint)
-                    ->data(Arr::removeNullValues($this->mappedData->all()));
+                    ->data(Arr::removeNullValues($saveData));
 
                 $dateToUse = ($this->mappedData->has('date')) ? $this->mappedData->get('date', now()) : now();
                 $entry->date($dateToUse);

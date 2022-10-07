@@ -36,9 +36,11 @@ class CollectSettings
 
         $this->values = $this->file->read(false);
 
-        $fields = $fields->addValues($this->values);
+        if (is_array($this->values)) {
+            $fields = $fields->addValues($this->values);
 
-        $this->fields = $fields->preProcess();
+            $this->fields = $fields->preProcess();
+        }
     }
 
     public function updateValues($values)
