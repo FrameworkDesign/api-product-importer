@@ -97,6 +97,11 @@ return [
                 ],
                 'api_product_importer_statamic_saved_data_mapping' => [
                     'type' => 'array',
+                    'display' => 'Field mapping for imports',
+                    'instructions' => 'Add sku => sku to begin with',
+                    'default' => [
+                        'sku' => 'sku'
+                    ]
                 ]
             ],
         ]
