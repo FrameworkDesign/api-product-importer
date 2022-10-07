@@ -2133,7 +2133,7 @@ Statamic.$components.register("push-api-product-into-statamic-helper", _componen
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/framework000/CodeValet/fwk-statamic-test/addons/weareframework/api-product-importer/resources/js/cp.js */"./resources/js/cp.js");
+module.exports = __webpack_require__(/*! /Users/framework000/CodeValet/statamic-fwk/addons/weareframework/api-product-importer/resources/js/cp.js */"./resources/js/cp.js");
 
 
 /***/ })
