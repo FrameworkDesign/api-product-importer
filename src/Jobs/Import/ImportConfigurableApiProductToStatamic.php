@@ -145,7 +145,6 @@ class ImportConfigurableApiProductToStatamic implements ShouldQueue
                     'variants' => $finalUniqueVariantNames,
                     'options' => $productVariantOptions
                 ];
-
             }
 
             $slug = $this->mappedData->get('slug');

@@ -371,6 +371,7 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       this.$axios.get(cp_url("weareframework/api-product-importer/api/pull/".concat(this.sku))).then(function (response) {
         if (response.data && response.data.product && response.data.success) {
+          console.log(response.data.savedMapping);
           _this3.product = response.data.product;
           _this3.productDataCollected = true;
           _this3.fieldMappingConfig = response.data.mapping;

@@ -283,6 +283,7 @@ export default {
             this.$axios.get(cp_url(`weareframework/api-product-importer/api/pull/${this.sku}`)).then(response => {
 
                 if (response.data && response.data.product && response.data.success) {
+                    console.log(response.data.savedMapping)
                     this.product = response.data.product
                     this.productDataCollected = true
                     this.fieldMappingConfig = response.data.mapping

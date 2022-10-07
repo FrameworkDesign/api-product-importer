@@ -162,9 +162,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 Log::info('$productVariantOptions ' . json_encode($productVariantOptions));
             }
 
-
             Log::info('$this->mappedData ' . json_encode($this->mappedData));
-
 
             $slug = $this->mappedData->get('slug');
             $sku = $this->mappedData->get('sku');
@@ -192,6 +190,7 @@ class ImportSimpleApiProductToStatamic implements ShouldQueue
                 }
 
                 $entry = Entry::make()
+                    ->slug(Str::slug($title))
                     ->locale($this->site)
                     ->collection($this->collection)
                     ->blueprint($blueprint)

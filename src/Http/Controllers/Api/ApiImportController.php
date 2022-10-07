@@ -43,9 +43,9 @@ class ApiImportController extends CpController
     {
         try {
             $collectionName = $request->input('collection') ?? 'products';
-            $savedMapping = cache()->get('api-product-statamic-saved-data-mapping');
             $settings = (new CollectSettings($file))->handle();
             $url = $settings->values['api_product_importer_products_single_route'];
+            $savedMapping = $settings->values['api_product_importer_statamic_saved_data_mapping'] ?? null;
             $url = str_replace('{sku}', $sku, $url);
 
             Log::info('$url '.$url);
@@ -100,8 +100,8 @@ class ApiImportController extends CpController
                 'mapping' => [
                     'keys' => $keys,
                     'fields' => $fields,
-                    'savedMapping' => $savedMapping
-                ]
+                ],
+                'savedMapping' => $savedMapping
             ]);
         } catch (\Exception $exception) {
             return GeneralError::api($exception);
@@ -125,7 +125,7 @@ class ApiImportController extends CpController
         }
     }
 
-    public function store($sku, Request $request)
+    public function store($sku, Request $request, File $file)
     {
         try {
             $uuid = Str::uuid()->toString();
@@ -138,6 +138,11 @@ class ApiImportController extends CpController
             $collection = $request->get('collection');
             $mapping = collect($request->get('mapping'))->filter();
             $customMapping = ($request->has('custom_mapping')) ? collect($request->get('custom_mapping'))->filter() : collect([]);
+
+            $settings = (new CollectSettings($file))->handle();
+            $settingsValues = $settings->values;
+            $settingsValues['api_product_importer_statamic_saved_data_mapping'] = $mapping->toArray();
+            $settings->updateValues($settingsValues);
 
             ImportSimpleApiProductToStatamic::dispatch(
                 $uuid,

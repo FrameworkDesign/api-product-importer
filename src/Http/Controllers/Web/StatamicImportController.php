@@ -10,6 +10,8 @@ use Statamic\Facades\Collection;
 use Statamic\Http\Controllers\CP\CpController;
 use Weareframework\ApiProductImporter\Jobs\Import\ImportAllConfigurableApiProductsToStatamic;
 use Weareframework\ApiProductImporter\Jobs\Import\ImportAllSimpleApiProductsToStatamic;
+use Weareframework\ApiProductImporter\Library\Files\File;
+use Weareframework\ApiProductImporter\Library\Settings\CollectSettings;
 use Weareframework\ApiProductImporter\Models\ApiProduct;
 
 class StatamicImportController extends CpController
@@ -53,10 +55,11 @@ class StatamicImportController extends CpController
         ]);
     }
 
-    public function fieldMapping(Request $request)
+    public function fieldMapping(Request $request, File $file)
     {
         try {
-            $savedMapping = cache()->get('api-product-statamic-saved-data-mapping');
+            $settings = (new CollectSettings($file))->handle();
+            $savedMapping = $settings->values['api_product_importer_statamic_saved_data_mapping'] ?? null;
             $handle = $request->get('collection');
             $type = 'configurable';//($handle === 'products_with_variants') ? 'configurable' : 'simple';
             $collection = Collection::findByHandle('products'); // $handle
@@ -86,7 +89,7 @@ class StatamicImportController extends CpController
         }
     }
 
-    public function processImport(Request $request)
+    public function processImport(Request $request, File $file)
     {
         try {
             cache()->forget("api-product-statamic-import-cleared");
@@ -98,7 +101,10 @@ class StatamicImportController extends CpController
             $uuid = Str::uuid()->toString();
             $request->session()->put('api-product-statamic-data-import-uuid', $uuid);
 
-            cache()->put('api-product-statamic-saved-data-mapping', $mapping);
+            $settings = (new CollectSettings($file))->handle();
+            $settingsValues = $settings->values;
+            $settingsValues['api_product_importer_statamic_saved_data_mapping'] = $mapping->toArray();
+            $settings->updateValues($settingsValues);
 
             $collectionModel = Collection::findByHandle('products');
             $blueprintHandle = ($collection === 'products_with_variants') ? 'products_with_variants' : null;

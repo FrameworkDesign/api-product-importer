@@ -95,6 +95,9 @@ return [
                         'PUT' => 'PUT',
                     ]
                 ],
+                'api_product_importer_statamic_saved_data_mapping' => [
+                    'type' => 'array',
+                ]
             ],
         ]
     ]
