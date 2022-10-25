@@ -141,7 +141,7 @@ class ApiProduct extends Model
         'product_image_primary_alt',
         'product_image_secondary',
         'product_image_secondary_alt',
-        'product_gallery_images',
+        'product_detail_images',
         'product_variant_images',
         'created_by_id',
         'updated_by_id'
@@ -187,7 +187,7 @@ class ApiProduct extends Model
         'product_knuckle' => 'array',
         'product_palm' => 'array',
         'product_other' => 'array',
-        'product_gallery_images' => 'array',
+        'product_detail_images' => 'array',
         'product_variant_images' => 'array',
     ];
 

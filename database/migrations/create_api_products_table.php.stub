@@ -147,7 +147,7 @@ class CreateApiProductsTable extends Migration
             $table->string('product_image_primary_alt')->nullable();
             $table->string('product_image_secondary')->nullable();
             $table->string('product_image_secondary_alt')->nullable();
-            $table->string('product_gallery_images')->nullable();
+            $table->string('product_detail_images')->nullable();
             $table->string('product_variant_images')->nullable();
 
             $table->unsignedBigInteger('created_by_id')->nullable();

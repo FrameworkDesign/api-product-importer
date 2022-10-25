@@ -111,22 +111,33 @@ trait ImageImportHelpersTrait
     {
         $success = false;
         try {
-            $extensionSave = config('statamic.api-product-importer.extension_save');
-            $imageQualitySave = config('statamic.api-product-importer.image_quality_save') ?? 50;
-
+            $extensionSave = 'jpg';//config('statamic.api-product-importer.extension_save');
+            $imageQualitySave = 50;//config('statamic.api-product-importer.image_quality_save') ?? 50;
+            $newResize = config('statamic.api-product-importer.resize_pixels');
             // $asset->width()
             $newTempFile = InterventionImage::make($url);
 
-            if ($newTempFile->width() > config('statamic.api-product-importer.resize_pixels')) {
+            Log::info('extensionSave: ' . $extensionSave);
+            Log::info('imageQualitySave: ' . $imageQualitySave);
+            Log::info('newTempfile->width: ' . $newTempFile->width());
+            Log::info('newResize: ' . $newResize);
+            if ($newTempFile->width() > $newResize) {
                 // resize the image to a width of {resize_pixels} and constrain aspect ratio (auto height)
-                $newTempFile->resize(config('statamic.api-product-importer.resize_pixels'), null, function ($constraint) {
+                //$newTempFile->resize($newResize, null, function ($constraint) {
+                //    $constraint->aspectRatio();
+                //});
+                //$newTempFile->resizeCanvas($newResize, null, 'center', false, '#ffffff');
+                $jpg = InterventionImage::canvas($newTempFile->width(), $newTempFile->height(), '#ffffff');
+                $jpg->insert($url);
+                $jpg->resize($newResize, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
             }
+            $jpg->save('temp', $imageQualitySave, $extensionSave);
+            Storage::put($tempFile, $jpg);
+            //$newTempFile->save('temp', $imageQualitySave, $extensionSave);
 
-            $newTempFile->save('temp', $imageQualitySave, $extensionSave);
-
-            Storage::put($tempFile, $newTempFile);
+            //Storage::put($tempFile, $newTempFile);
             $success = true;
         } catch (\Exception $e) {
             Log::info('InterventionImage conversion failed error: ' . $e->getMessage());
