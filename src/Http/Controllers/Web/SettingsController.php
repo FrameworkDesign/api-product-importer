@@ -2,6 +2,7 @@
 
 namespace Weareframework\ApiProductImporter\Http\Controllers\Web;
 
+use Illuminate\Support\Facades\Queue;
 use Weareframework\ApiProductImporter\Library\Files\File;
 use Statamic\Facades\Site;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class SettingsController extends CpController
 
     public function index(Request $request)
     {
+        $queueSize = Queue::size();
         $this->setLocale();
 
         $blueprint = Blueprint::makeFromSections(config('statamic.api-product-importer.settings-blueprint'));
@@ -42,6 +44,7 @@ class SettingsController extends CpController
             'blueprint' => $blueprint->toPublishArray(),
             'values'    => $fields->values(),
             'meta'      => $fields->meta(),
+            'queueSize' => $queueSize
         ]);
     }
 

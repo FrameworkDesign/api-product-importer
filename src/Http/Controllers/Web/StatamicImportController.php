@@ -4,6 +4,7 @@ namespace Weareframework\ApiProductImporter\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Statamic\Facades\Site;
 use Statamic\Facades\Collection;
@@ -148,11 +149,13 @@ class StatamicImportController extends CpController
 
     public function finished(Request $request)
     {
+        $queueSize = Queue::size();
         $type = $request->session()->get('api-product-statamic-data-import-type') ?? 'no type';
         $uuid = $request->session()->get('api-product-statamic-data-import-uuid') ?? null;
         return view('api-product-importer::statamic-import.finished', [
             'type' => $type,
             'uuid' => $uuid,
+            'queueSize' => $queueSize
         ]);
     }
 

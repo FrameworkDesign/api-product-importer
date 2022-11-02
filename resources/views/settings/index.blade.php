@@ -1,6 +1,7 @@
 @extends('statamic::layout')
 @section('title', 'API Product Importer')
 @section('content')
+    @include('api-product-importer::partials.queue-info')
     <div class="flex items-center mb-3">
         <h1 class="flex-1">API Product Importer Settings</h1>
     </div>

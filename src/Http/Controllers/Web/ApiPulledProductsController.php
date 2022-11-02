@@ -3,6 +3,7 @@
 namespace Weareframework\ApiProductImporter\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Queue;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Site;
 use Statamic\Http\Controllers\CP\CpController;
@@ -14,7 +15,7 @@ class ApiPulledProductsController extends CpController
 {
     public function index(Request $request, File $file)
     {
-
+        $queueSize = Queue::size();
         $collections = Collection::all()->map(function ($collection) {
             return [
                 'label' => $collection->title(),
@@ -44,7 +45,8 @@ class ApiPulledProductsController extends CpController
         return view('api-product-importer::api-imported.index', [
             'products' => $products,
             'collections' => $collections,
-            'sites' => $sites
+            'sites' => $sites,
+            'queueSize' => $queueSize
         ]);
     }
 }

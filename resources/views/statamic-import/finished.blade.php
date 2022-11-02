@@ -8,6 +8,7 @@
     }
 @endphp
 @section('content')
+    @include('api-product-importer::partials.queue-info')
     <form action="{{ cp_route('weareframework.api-product-importer.statamic.finished') }}" method="POST">
         {{ csrf_field() }}
 
