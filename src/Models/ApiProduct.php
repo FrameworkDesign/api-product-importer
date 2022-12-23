@@ -110,6 +110,8 @@ class ApiProduct extends Model
         'chest_armour',
         'back_armour',
         'elbow_knee_armour',
+        'knee_armour',
+        'elbow_armour',
         'shoulder_armour',
         'hip_armour',
 

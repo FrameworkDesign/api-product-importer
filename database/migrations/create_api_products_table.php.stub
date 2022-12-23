@@ -116,6 +116,8 @@ class CreateApiProductsTable extends Migration
             $table->string('back_armour')->nullable();
             $table->string('chest_armour')->nullable();
             $table->string('elbow_knee_armour')->nullable();
+            $table->string('knee_armour')->nullable();
+            $table->string('elbow_armour')->nullable();
             $table->string('shoulder_armour')->nullable();
             $table->string('hip_armour')->nullable();
 
