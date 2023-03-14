@@ -32,9 +32,9 @@ class CreateApiProductsTable extends Migration
             $table->longText('description')->nullable();
 
             // seo
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->text('meta_keyword')->nullable();
+            $table->string('meta_title', 20)->nullable();
+            $table->text('meta_description', 20)->nullable();
+            $table->text('meta_keyword', 20)->nullable();
 
             // region
             $table->text('websites')->nullable();
@@ -71,6 +71,9 @@ class CreateApiProductsTable extends Migration
             $table->string('product_tech')->nullable();
             $table->string('product_line')->nullable();
             $table->string('product_collection_year')->nullable();
+
+            $table->boolean('is_accessory')->default(0);
+            $table->string('accessory_type')->nullable();
 
             // color
             $table->string('color')->nullable();

@@ -66,6 +66,10 @@ class ApiProduct extends Model
         'product_line', // product_line
         'product_collection_year', // product_collection_year
 
+        // accessory categorisation
+        'is_accessory',
+        'accessory_type',
+
         // color
         'color',
         'variant_colors',
@@ -156,6 +160,7 @@ class ApiProduct extends Model
     protected $casts = [
 //        'description' => 'json',
         'use_config_backorders' => 'boolean',
+        'is_accessory' => 'boolean',
         'configurable_on' => 'json',
         'variant_colors' => 'array',
         'size_all_uk' => 'array',
