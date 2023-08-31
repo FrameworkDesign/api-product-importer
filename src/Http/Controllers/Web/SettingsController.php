@@ -31,7 +31,7 @@ class SettingsController extends CpController
         $queueSize = Queue::size();
         $this->setLocale();
 
-        $blueprint = Blueprint::makeFromSections(config('statamic.api-product-importer.settings-blueprint'));
+        $blueprint = Blueprint::makeFromTabs(config('statamic.api-product-importer.settings-blueprint'));
         $fields = $blueprint->fields();
 
         $values = $this->file->read(false);
@@ -52,7 +52,7 @@ class SettingsController extends CpController
     {
         $this->setLocale();
 
-        $blueprint = Blueprint::makeFromSections(config('statamic.api-product-importer.settings-blueprint'));
+        $blueprint = Blueprint::makeFromTabs(config('statamic.api-product-importer.settings-blueprint'));
         $fields = $blueprint->fields()->addValues($request->all());
 
         // Perform validation. Like Laravel's standard validation, if it fails,
@@ -77,7 +77,7 @@ class SettingsController extends CpController
         $this->file->setLocale(
             session('statamic.cp.selected-site') ?
                 Site::get(session('statamic.cp.selected-site'))->locale() :
-                Site::current()->locale());
+                Site::current()->locale()
+        );
     }
-
 }

@@ -31,7 +31,7 @@ class CollectSettings
     {
         $this->setLocale();
 
-        $this->blueprint = Blueprint::makeFromSections(config('statamic.api-product-importer.settings-blueprint'));
+        $this->blueprint = Blueprint::makeFromTabs(config('statamic.api-product-importer.settings-blueprint'));
         $fields = $this->blueprint->fields();
 
         $this->values = $this->file->read(false);
@@ -53,14 +53,15 @@ class CollectSettings
         $this->file->setLocale(
             session('statamic.cp.selected-site') ?
                 Site::get(session('statamic.cp.selected-site'))->locale() :
-                Site::current()->locale());
+                Site::current()->locale()
+        );
     }
 
     function __get($name)
     {
         if (method_exists($this, $name)) {
             return $this->$name();
-        } else if(property_exists($this,$name)){
+        } else if (property_exists($this, $name)) {
             // Getter/Setter not defined so return property if it exists
             return $this->$name;
         }
